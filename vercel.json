@@ -1,0 +1,14 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "services": {
+    "portfolio-fotografa": {
+      "root": "portfolio-fotografa",
+      "framework": "vite"
+    },
+    "studio": {
+      "root": "portfolio-fotografa/studio",
+      "framework": "sanity"
+    }
+  },
+  "rewrites": []
+}
