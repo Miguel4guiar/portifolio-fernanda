@@ -4,7 +4,7 @@
 @tailwind utilities;
 
 :root {
-  --ink: #29201f; --paper: #000000; --rose: #d99d91; --wine: #743f46;
+  --ink: #29201f; --paper: #f4efe5; --rose: #d99d91; --wine: #743f46;
   --sage: #aebba8; --lilac: #c8bfd8; --muted: #716d67;
   color: var(--ink); background: var(--paper); font-family: 'Space Mono', monospace;
   font-synthesis: none;

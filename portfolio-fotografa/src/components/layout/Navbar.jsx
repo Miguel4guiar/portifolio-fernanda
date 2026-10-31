@@ -37,10 +37,10 @@ export default function Navbar() {
           <a
             href="#top"
             onClick={(e) => { e.preventDefault(); scrollTo('#top'); }}
-            className="font-display text-xl font-extrabold uppercase tracking-tightest"
+            className="font-display text-xl font-extrabold uppercase tracking-tightest text-[var(--ink)]"
             data-cursor="view"
           >
-            Fe<span className="text-acid">shoo</span>ts
+            Fe<span className="text-[var(--wine)]">shoo</span>ts
           </a>
 
           <ul className="hidden items-center gap-10 md:flex">
@@ -48,7 +48,8 @@ export default function Navbar() {
               <li key={link.href}>
                 <button
                   onClick={() => scrollTo(link.href)}
-                  className="font-mono text-xs uppercase tracking-widest2 text-smoke transition-colors hover:text-bone"
+                  /* COR PADRÃO PRETA (text-[var(--ink)]) E HOVER VINHO (hover:text-[var(--wine)]) */
+                  className="font-mono text-xs uppercase tracking-widest2 text-[var(--ink)] transition-colors hover:text-[var(--wine)]"
                 >
                   {link.label}
                 </button>
@@ -57,16 +58,16 @@ export default function Navbar() {
           </ul>
 
           <div className="hidden items-center gap-4 md:flex">
-            <a href="mailto:booking@raiofotografia.com" aria-label="E-mail" className="text-smoke transition-colors hover:text-acid">
+            <a href="mailto:booking@raiofotografia.com" aria-label="E-mail" className="text-[var(--ink)] transition-colors hover:text-[var(--wine)]">
               <Mail size={18} />
             </a>
-            <a href="https://instagram.com" target="_blank" rel="noreferrer" aria-label="Instagram" className="text-smoke transition-colors hover:text-acid">
+            <a href="https://instagram.com" target="_blank" rel="noreferrer" aria-label="Instagram" className="text-[var(--ink)] transition-colors hover:text-[var(--wine)]">
               <Instagram size={18} />
             </a>
           </div>
 
           <button
-            className="flex h-11 w-11 items-center justify-center text-bone md:hidden"
+            className="flex h-11 w-11 items-center justify-center text-[var(--ink)] md:hidden"
             onClick={() => setOpen(true)}
             aria-label="Abrir menu"
           >
@@ -81,13 +82,13 @@ export default function Navbar() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[60] flex flex-col bg-void p-6 md:hidden"
+            className="fixed inset-0 z-[60] flex flex-col bg-[var(--paper)] p-6 md:hidden"
           >
             <div className="flex justify-end">
               <button
                 onClick={() => setOpen(false)}
                 aria-label="Fechar menu"
-                className="flex h-11 w-11 items-center justify-center text-bone"
+                className="flex h-11 w-11 items-center justify-center text-[var(--ink)]"
               >
                 <X size={28} />
               </button>
@@ -102,18 +103,19 @@ export default function Navbar() {
                 >
                   <button
                     onClick={() => scrollTo(link.href)}
-                    className="font-display text-4xl font-bold uppercase text-bone xs:text-5xl"
+                    /* MOBILE: COR PRETA E HOVER VINHO */
+                    className="font-display text-4xl font-bold uppercase text-[var(--ink)] transition-colors hover:text-[var(--wine)] xs:text-5xl"
                   >
                     {link.label}
                   </button>
                 </motion.li>
               ))}
             </ul>
-            <div className="flex items-center gap-6 border-t border-smoke/20 pt-6">
-              <a href="mailto:booking@raiofotografia.com" aria-label="E-mail" className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest2 text-smoke">
+            <div className="flex items-center gap-6 border-t border-[var(--ink)]/20 pt-6">
+              <a href="mailto:booking@raiofotografia.com" aria-label="E-mail" className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest2 text-[var(--ink)] hover:text-[var(--wine)]">
                 <Mail size={16} /> E-mail
               </a>
-              <a href="https://instagram.com" target="_blank" rel="noreferrer" aria-label="Instagram" className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest2 text-smoke">
+              <a href="https://instagram.com" target="_blank" rel="noreferrer" aria-label="Instagram" className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest2 text-[var(--ink)] hover:text-[var(--wine)]">
                 <Instagram size={16} /> Instagram
               </a>
             </div>
