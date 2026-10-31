@@ -9,18 +9,58 @@ export default function Gallery() {
   const { photos, loading } = useManagedPhotos();
   const [category, setCategory] = useState('All');
   const [activePhoto, setActivePhoto] = useState(null);
-  const filtered = useMemo(() => (category === 'All' ? photos : photos.filter((p) => p.category === category)), [photos, category]);
+
+  const filtered = useMemo(
+    () => (category === 'All' ? photos : photos.filter((p) => p.category === category)),
+    [photos, category]
+  );
+
   const navigate = (dir) => {
-    if (!activePhoto || !filtered.length) return;
     const idx = filtered.findIndex((p) => p.id === activePhoto.id);
-    setActivePhoto(filtered[(idx + dir + filtered.length) % filtered.length]);
+    const next = (idx + dir + filtered.length) % filtered.length;
+    setActivePhoto(filtered[next]);
   };
-  return <section id="galeria" className="editorial-section work-section">
-    <div className="section-heading"><div><span className="eyebrow">01 / Seleção de trabalhos</span><h2>Selected <i>work</i></h2></div><p>Imagens que guardam um instante,<br/>uma atmosfera, uma história.</p></div>
-    <div className="gallery-toolbar"><span>{String(filtered.length).padStart(2, '0')} imagens</span><FilterTabs active={category} onChange={setCategory}/></div>
-    {loading ? <div className="editorial-loading">Carregando arquivo...</div> : filtered.length ? <motion.div layout className="editorial-gallery">
-      {filtered.map((photo, i) => <PhotoCard key={photo.id} photo={photo} index={i} onOpen={setActivePhoto}/>) }
-    </motion.div> : <p className="empty-archive">As imagens publicadas no Sanity aparecerão aqui.</p>}
-    <Lightbox photo={activePhoto} onClose={() => setActivePhoto(null)} onPrev={() => navigate(-1)} onNext={() => navigate(1)}/>
-  </section>;
+
+  return (
+    <section id="galeria" className="bg-void px-4 py-20 sm:px-6 sm:py-24 md:px-10 md:py-32">
+      <div className="mx-auto max-w-[1600px]">
+        <div className="mb-8 flex flex-col gap-6 sm:mb-12 md:flex-row md:items-end md:justify-between">
+          <div>
+            <span className="font-mono text-xs uppercase tracking-widest2 text-acid">Arquivo 01</span>
+            <h2 className="mt-3 break-words font-display text-display-lg font-extrabold uppercase text-bone">
+              Galeria
+            </h2>
+          </div>
+          <FilterTabs active={category} onChange={setCategory} />
+        </div>
+
+        {loading ? (
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div key={i} className="aspect-[3/4] animate-pulse bg-asphalt" />
+            ))}
+          </div>
+        ) : (
+          <motion.div layout className="columns-1 gap-3 xs:columns-2 sm:gap-4 md:columns-3 lg:columns-4">
+            {filtered.map((photo, i) => (
+              <PhotoCard key={photo.id} photo={photo} index={i} onOpen={setActivePhoto} />
+            ))}
+          </motion.div>
+        )}
+
+        {!loading && filtered.length === 0 && (
+          <p className="py-20 text-center font-mono text-sm text-smoke">
+            Nenhum registro nesta categoria ainda.
+          </p>
+        )}
+      </div>
+
+      <Lightbox
+        photo={activePhoto}
+        onClose={() => setActivePhoto(null)}
+        onPrev={() => navigate(-1)}
+        onNext={() => navigate(1)}
+      />
+    </section>
+  );
 }
