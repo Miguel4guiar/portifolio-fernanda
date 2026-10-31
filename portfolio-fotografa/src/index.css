@@ -4,7 +4,7 @@
 @tailwind utilities;
 
 :root {
-  --ink: #29201f; --paper: #f4efe5; --rose: #d99d91; --wine: #743f46;
+  --ink: #29201f; --paper: #000000; --rose: #d99d91; --wine: #743f46;
   --sage: #aebba8; --lilac: #c8bfd8; --muted: #716d67;
   color: var(--ink); background: var(--paper); font-family: 'Space Mono', monospace;
   font-synthesis: none;
@@ -28,7 +28,7 @@ main { min-height: 100svh; }
   font-size: 9px; font-weight: 400; letter-spacing: 0; line-height: 1.5; }
 .sidebar-content { display: flex; flex: 1; flex-direction: column; }
 .category-nav { display: flex; margin-top: 48px; flex-direction: column; align-items: flex-start; }
-.category-nav button { position: relative; padding: 1px 0; background: black; cursor: pointer;
+.category-nav button { position: relative; padding: 1px 0; background: transparent; cursor: pointer;
   font-size: 11px; line-height: 1.95; transition: color 180ms ease, padding 180ms ease; }
 .category-nav button::before { content: '—'; position: absolute; left: 0; opacity: 0; transition: opacity 180ms ease; }
 .category-nav button:hover, .category-nav button.active { color: var(--wine); padding-left: 20px; }
