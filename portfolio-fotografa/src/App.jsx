@@ -106,14 +106,7 @@ export default function App() {
       {view === 'work' && (
         <div ref={railRef} className={`photo-rail ${dragging ? 'dragging' : ''}`}
           onMouseDown={startDrag} onMouseMove={moveDrag} onMouseUp={stopDrag} onMouseLeave={stopDrag}>
-          <section className="intro-panel">
-            <div className="intro-copy">
-              <span>Portfólio selecionado · fotografia &amp; audiovisual</span>
-              <h1>Feshoots<br /><em>Visual archive.</em></h1>
-              <p>Registro de palco, bastidor e cultura. Um arquivo visual em constante movimento.</p>
-            </div>
-            <span className="scroll-cue">Arraste / role para o lado <b>→</b></span>
-          </section>
+         
 
           {loading && <div className="loading-panel">Carregando arquivo...</div>}
           {!loading && error && <div className="loading-panel">Não foi possível carregar as imagens. Verifique a conexão com o Sanity.</div>}

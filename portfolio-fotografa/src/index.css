@@ -52,18 +52,10 @@ main { min-height: 100svh; }
 .photo-rail.dragging { cursor: grabbing; scroll-behavior: auto; user-select: none; }
 .photo-rail::-webkit-scrollbar { height: 4px; }
 .photo-rail::-webkit-scrollbar-thumb { background: var(--wine); }
-.intro-panel {
-  position: relative; width: clamp(310px, 31vw, 480px); height: 100%; padding: 3vh 2.5vw;
-  flex: none; background: var(--lilac); display: flex; align-items: center; scroll-snap-align: start;
-}
-.intro-copy > span, .panel-index { display: block; margin-bottom: 24px; color: #82786f;
-  font-size: 8px; letter-spacing: .06em; text-transform: uppercase; }
-.intro-copy h1 { margin: 0; font-size: clamp(42px, 5vw, 78px); font-weight: 700;
-  letter-spacing: -.09em; line-height: .94; }
-.intro-copy h1 em { color: var(--wine); font-size: .62em; font-style: normal; letter-spacing: -.07em; }
-.intro-copy p { max-width: 340px; margin: 35px 0 0; font-size: 10px; line-height: 1.8; }
-.scroll-cue { position: absolute; right: 28px; bottom: 25px; color: #6f6862; font-size: 8px; }
-.scroll-cue b { margin-left: 10px; color: #171714; font-size: 16px; }
+
+  
+
+
 .photo-frame { width: auto; height: 100%; margin: 0; flex: none; scroll-snap-align: center; }
 .photo-frame button { position: relative; height: calc(100% - 42px); min-width: 260px; padding: 0;
   overflow: hidden; background: var(--sage); cursor: zoom-in; }
@@ -124,11 +116,7 @@ main { min-height: 100svh; }
     padding: 14px 14px 24px; gap: 14px; scroll-snap-type: x mandatory; overscroll-behavior-x: contain;
     -webkit-overflow-scrolling: touch; }
   .section-view { height: auto; min-height: calc(100svh - 64px); margin-left: 0; padding: 14px; }
-  .intro-panel { width: min(86vw,440px); height: 100%; min-height: 0; padding: 35px 26px; scroll-snap-align: center; }
-  .intro-copy h1 { font-size: clamp(49px,15vw,76px); }
-  .scroll-cue { right: auto; left: 26px; font-size: 0; }
-  .scroll-cue::before { content: 'Role para explorar'; font-size: 8px; }
-  .scroll-cue b { display: none; }
+
   .photo-frame { width: min(84vw,470px); height: 100%; scroll-snap-align: center; }
   .photo-frame button { width: 100%; height: calc(100% - 48px); min-width: 0; }
   .photo-frame img, .photo-frame.frame-0 img, .photo-frame.frame-1 img, .photo-frame.frame-2 img {
