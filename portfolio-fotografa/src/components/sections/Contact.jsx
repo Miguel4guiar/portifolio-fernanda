@@ -34,14 +34,15 @@ export default function Contact() {
           </p>
 
           <div className="flex flex-col gap-4">
-            <a
-              href="https://mail.google.com/mail/?view=cm&fs=1&to=fernandaopitacio@gmail.com&su=Contato%20pelo%20portf%C3%B3lio"
+               <a
+  href="https://mail.google.com/mail/?view=cm&fs=1&to=fernandaopitacio@gmail.com"
   target="_blank"
   rel="noopener noreferrer"
-              className="group flex items-center gap-3 font-mono text-sm uppercase tracking-widest2 text-bone"
-            >
-              <Mail size={16} className="text-acid" />
-              fernandaopitacio@gmail.com
+  aria-label="Enviar e-mail"
+  className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest2 text-[var(--ink)] hover:text-[var(--wine)]"
+>
+  <Mail size={16} /> E-mail
+
               <ArrowUpRight size={14} className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
             </a>
             <a
