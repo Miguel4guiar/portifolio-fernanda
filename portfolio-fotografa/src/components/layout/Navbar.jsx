@@ -58,9 +58,7 @@ export default function Navbar() {
           </ul>
 
           <div className="hidden items-center gap-4 md:flex">
-            <a href="https://mail.google.com/mail/?view=cm&fs=1&to=fernandaopitacio@gmail.com" target="_blank" rel="noopener noreferrer" aria-label="E-mail" className="text-[var(--ink)] transition-colors hover:text-[var(--wine)]">
-              <Mail size={18} />
-            </a>
+            
             <a href="https://instagram.com" target="_blank" rel="noreferrer" aria-label="Instagram" className="text-[var(--ink)] transition-colors hover:text-[var(--wine)]">
               <Instagram size={18} />
             </a>
