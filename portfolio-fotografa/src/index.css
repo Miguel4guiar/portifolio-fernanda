@@ -503,6 +503,25 @@ main {
   max-height: 75svh;
 }
 
+/* Garantir que links também fiquem pretos */
+.about-panel a,
+.contact-panel a {
+  color: #000000;
+}
+
+/* Manter os ícones na mesma cor */
+.about-panel svg,
+.contact-panel svg {
+  color: #000000;
+}
+
+/* Manter os textos de identificação pretos */
+.about-panel .panel-index,
+.contact-panel .panel-index,
+.about-panel .clients span,
+.contact-panel .contact-note {
+  color: #000000;
+}
 /* TABLETS E CELULARES */
 
 @media (max-width: 900px) {
