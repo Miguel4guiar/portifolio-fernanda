@@ -244,9 +244,13 @@ export default function App() {
               Contato
             </button>
 
-            <a href="mailto:fernandaopitacio@gmail.com?subject=Contato%20pelo%20portf%C3%B3lio">
-              E-mail <ArrowUpRight size={12} />
-            </a>
+            <a
+  href="https://mail.google.com/mail/?view=cm&fs=1&to=fernandaopitacio@gmail.com&su=Contato%20pelo%20portf%C3%B3lio"
+  target="_blank"
+  rel="noopener noreferrer"
+>
+  fernandaopitacio@gmail.com
+</a>
           </nav>
 
           <a

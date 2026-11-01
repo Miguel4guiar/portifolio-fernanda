@@ -112,7 +112,7 @@ export default function Navbar() {
               ))}
             </ul>
             <div className="flex items-center gap-6 border-t border-[var(--ink)]/20 pt-6">
-              <a href="mailto:fernandaopitacio@gmail.com?subject=Contato%20pelo%20portf%C3%B3lio"className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest2 text-[var(--ink)] hover:text-[var(--wine)]">
+              <a href="https://mail.google.com/mail/?view=cm&fs=1&to=fernandaopitacio@gmail.com&su=Contato%20pelo%20portf%C3%B3lio" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest2 text-[var(--ink)] hover:text-[var(--wine)]">
                 <Mail size={16} /> E-mail
               </a>
               <a href="https://instagram.com" target="_blank" rel="noreferrer" aria-label="Instagram" className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest2 text-[var(--ink)] hover:text-[var(--wine)]">
