@@ -1,7 +1,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { ArrowUpRight, Instagram } from 'lucide-react';
-import image from '../../data/_P3_1145.jpg';
+import image from '../src/data/_P3_1145.jpg';
 import { useManagedPhotos } from './lib/useManagedPhotos.js';
 import Lightbox from './components/ui/Lightbox.jsx';
 
