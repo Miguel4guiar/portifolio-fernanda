@@ -12,24 +12,34 @@ const CATEGORIES = [
 ];
 
 export default function App() {
-  const { photos, loading, error } = useManagedPhotos();
+  const { photos, albums, loading, error } = useManagedPhotos();
   const [category, setCategory] = useState('All');
   const [view, setView] = useState('work');
   const [menuOpen, setMenuOpen] = useState(false);
   const [activePhoto, setActivePhoto] = useState(null);
+  const [activeAlbum, setActiveAlbum] = useState(null);
   const railRef = useRef(null);
   const dragRef = useRef({ x: 0, scrollLeft: 0 });
   const [dragging, setDragging] = useState(false);
 
+  const normalizeCategory = (value) => (value || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+  const categoryMatches = (value) => category === 'All' || normalizeCategory(value) === normalizeCategory(category);
+  const visibleAlbums = useMemo(() => albums.filter((album) => categoryMatches(album.category)), [albums, category]);
   const visiblePhotos = useMemo(() => photos.filter((p) =>
-    p.showInGallery !== false && (p.image || p.videoUrl) &&
-    (category === 'All' || (p.category || '').toUpperCase() === category)
+    p.showInGallery !== false && (p.image || p.videoUrl) && categoryMatches(p.category)
   ), [photos, category]);
-
+  const albumPhotos = activeAlbum?.photos || [];
+  const lightboxPhotos = activeAlbum ? albumPhotos : visiblePhotos;
+  const openAlbum = (album) => {
+    setActiveAlbum(album);
+    setActivePhoto(null);
+    requestAnimationFrame(() => railRef.current?.scrollTo({ left: 0, behavior: 'smooth' }));
+  };
+  const closeAlbum = () => { setActiveAlbum(null); setActivePhoto(null); };
   const navigate = (direction) => {
-    if (!activePhoto || !visiblePhotos.length) return;
-    const index = visiblePhotos.findIndex((p) => p.id === activePhoto.id);
-    setActivePhoto(visiblePhotos[(index + direction + visiblePhotos.length) % visiblePhotos.length]);
+    if (!activePhoto || !lightboxPhotos.length) return;
+    const index = lightboxPhotos.findIndex((p) => p.id === activePhoto.id);
+    setActivePhoto(lightboxPhotos[(index + direction + lightboxPhotos.length) % lightboxPhotos.length]);
   };
 
   useEffect(() => {
@@ -46,17 +56,19 @@ export default function App() {
 
   useEffect(() => {
     const onKey = (event) => {
-      if (event.key === 'Escape') { setActivePhoto(null); setMenuOpen(false); }
+      if (event.key === 'Escape') { setActivePhoto(null); setActiveAlbum(null); setMenuOpen(false); }
       if (activePhoto && event.key === 'ArrowRight') navigate(1);
       if (activePhoto && event.key === 'ArrowLeft') navigate(-1);
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [activePhoto, visiblePhotos]);
+  }, [activePhoto, lightboxPhotos]);
 
   const chooseCategory = (value) => {
     setCategory(value);
     setView('work');
+    setActiveAlbum(null);
+    setActivePhoto(null);
     setMenuOpen(false);
     requestAnimationFrame(() => railRef.current?.scrollTo({ left: 0, behavior: 'smooth' }));
   };
@@ -110,25 +122,59 @@ export default function App() {
 
           {loading && <div className="loading-panel">Carregando arquivo...</div>}
           {!loading && error && <div className="loading-panel">Não foi possível carregar as imagens. Verifique a conexão com o Sanity.</div>}
-          {!loading && !error && visiblePhotos.map((photo, index) => {
-            const isVideo = photo.mediaType === 'video' || Boolean(photo.videoUrl);
+          {activeAlbum && (
+            <div className="album-heading">
+              <button type="button" className="album-back" onClick={closeAlbum}>← Voltar aos projetos</button>
+              <span>{activeAlbum.category} {activeAlbum.year ? `· ${activeAlbum.year}` : ''}</span>
+              <h2>{activeAlbum.title}</h2>
+              {activeAlbum.description && <p>{activeAlbum.description}</p>}
+            </div>
+          )}
+          {!loading && !error && !activeAlbum && visibleAlbums.length > 0 && visibleAlbums.map((album, index) => (
+            <figure className={`photo-frame frame-${index % 3} album-cover-frame`} key={album.id}>
+              <button type="button" onClick={() => openAlbum(album)} aria-label={`Abrir álbum ${album.title}`}>
+                <img src={album.cover} alt={`Capa do álbum ${album.title}`} draggable="false" loading={index > 2 ? 'lazy' : 'eager'} />
+                <span className="album-count">{album.photos.length} {album.photos.length === 1 ? 'FOTO' : 'FOTOS'}</span>
+                <span className="view-photo">Abrir álbum ↗</span>
+              </button>
+              <figcaption>
+                <span>{String(index + 1).padStart(2, '0')} / {String(visibleAlbums.length).padStart(2, '0')}</span>
+                <strong>{album.title}</strong>
+                <span>{album.category} {album.year ? `· ${album.year}` : ''}</span>
+              </figcaption>
+            </figure>
+          ))}
+          {!loading && !error && activeAlbum && albumPhotos.map((photo, index) => {
             const image = photo.image || photo.thumbnail || photo.videoThumbnail;
             return (
               <figure className={`photo-frame frame-${index % 3}`} key={photo.id}>
-                <button type="button" onClick={() => setActivePhoto(photo)} aria-label={`Abrir ${photo.title || photo.artist || 'projeto'}`}>
-                  {image ? <img src={image} alt={photo.title || photo.artist || 'Fotografia do portfólio'} draggable="false" loading={index > 2 ? 'lazy' : 'eager'} /> : <span className="no-image">{isVideo ? 'FILME' : 'IMAGEM'}</span>}
-                  <span className="album-count">{isVideo ? 'FILME' : 'FOTOGRAFIA'}</span>
-                  <span className="view-photo">Ver projeto ↗</span>
+                <button type="button" onClick={() => setActivePhoto(photo)} aria-label={`Ampliar ${photo.title}`}>
+                  {image ? <img src={image} alt={photo.title || activeAlbum.title} draggable="false" loading={index > 2 ? 'lazy' : 'eager'} /> : <span className="no-image">VÍDEO</span>}
+                  <span className="view-photo">Ampliar ↗</span>
                 </button>
                 <figcaption>
-                  <span>{String(index + 1).padStart(2, '0')} / {String(visiblePhotos.length).padStart(2, '0')}</span>
-                  <strong>{photo.title || photo.artist || 'Projeto visual'}</strong>
-                  <span>{photo.category || (isVideo ? 'Audiovisual' : 'Fotografia')} {photo.year ? `· ${photo.year}` : ''}</span>
+                  <span>{String(index + 1).padStart(2, '0')} / {String(albumPhotos.length).padStart(2, '0')}</span>
+                  <strong>{photo.title || activeAlbum.title}</strong>
+                  <span>{photo.year || activeAlbum.year || ''}</span>
                 </figcaption>
               </figure>
             );
           })}
-          {!loading && !error && visiblePhotos.length === 0 && (
+          {!loading && !error && !activeAlbum && visibleAlbums.length === 0 && visiblePhotos.map((photo, index) => {
+            const isVideo = photo.mediaType === 'video' || Boolean(photo.videoUrl);
+            const image = photo.image || photo.thumbnail || photo.videoThumbnail;
+            return (
+              <figure className={`photo-frame frame-${index % 3}`} key={photo.id}>
+                <button type="button" onClick={() => setActivePhoto(photo)} aria-label={`Ampliar ${photo.title || photo.artist || 'projeto'}`}>
+                  {image ? <img src={image} alt={photo.title || photo.artist || 'Fotografia do portfólio'} draggable="false" loading={index > 2 ? 'lazy' : 'eager'} /> : <span className="no-image">{isVideo ? 'FILME' : 'IMAGEM'}</span>}
+                  <span className="album-count">{isVideo ? 'FILME' : 'FOTOGRAFIA'}</span>
+                  <span className="view-photo">Ampliar ↗</span>
+                </button>
+                <figcaption><span>{String(index + 1).padStart(2, '0')} / {String(visiblePhotos.length).padStart(2, '0')}</span><strong>{photo.title || photo.artist || 'Projeto visual'}</strong><span>{photo.category || 'Fotografia'} {photo.year ? `· ${photo.year}` : ''}</span></figcaption>
+              </figure>
+            );
+          })}
+          {!loading && !error && ((activeAlbum && albumPhotos.length === 0) || (!activeAlbum && visibleAlbums.length === 0 && visiblePhotos.length === 0)) && (
             <div className="loading-panel">Nenhum projeto nesta categoria ainda.</div>
           )}
         </div>
