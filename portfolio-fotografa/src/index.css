@@ -522,6 +522,26 @@ main {
 .contact-panel .contact-note {
   color: #000000;
 }
+
+/* FORÇAR TODOS OS TEXTOS DO SOBRE E CONTATO EM PRETO */
+
+.about-panel h2,
+.about-panel p,
+.about-panel span,
+.about-panel a,
+.contact-panel h2,
+.contact-panel p,
+.contact-panel span,
+.contact-panel a {
+  color: #000000 !important;
+}
+
+/* Ícones */
+.about-panel svg,
+.contact-panel svg {
+  color: #000000 !important;
+}
+
 /* TABLETS E CELULARES */
 
 @media (max-width: 900px) {
