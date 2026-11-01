@@ -58,7 +58,7 @@ export default function Navbar() {
           </ul>
 
           <div className="hidden items-center gap-4 md:flex">
-            <a href="mailto:booking@raiofotografia.com" aria-label="E-mail" className="text-[var(--ink)] transition-colors hover:text-[var(--wine)]">
+            <a href="https://mail.google.com/mail/?view=cm&fs=1&to=fernandaopitacio@gmail.com" target="_blank" rel="noopener noreferrer" aria-label="E-mail" className="text-[var(--ink)] transition-colors hover:text-[var(--wine)]">
               <Mail size={18} />
             </a>
             <a href="https://instagram.com" target="_blank" rel="noreferrer" aria-label="Instagram" className="text-[var(--ink)] transition-colors hover:text-[var(--wine)]">
@@ -119,8 +119,9 @@ export default function Navbar() {
   aria-label="Enviar e-mail"
   className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest2 text-[var(--ink)] hover:text-[var(--wine)]"
 >
+  </a>
   <Mail size={16} /> E-mail
-</a>
+
               <a href="https://instagram.com" target="_blank" rel="noreferrer" aria-label="Instagram" className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest2 text-[var(--ink)] hover:text-[var(--wine)]">
                 <Instagram size={16} /> Instagram
               </a>
