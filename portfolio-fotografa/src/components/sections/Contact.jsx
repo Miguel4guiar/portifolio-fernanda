@@ -35,7 +35,7 @@ export default function Contact() {
 
           <div className="flex flex-col gap-4">
                <a
-  href="https://mail.google.com/mail/?view=cm&fs=1&to=fernandaopitacio@gmail.com"
+   href="https://mail.google.com/mail/?view=cm&fs=1&to=fernandaopitacio@gmail.com"
   target="_blank"
   rel="noopener noreferrer"
   aria-label="Enviar e-mail"
