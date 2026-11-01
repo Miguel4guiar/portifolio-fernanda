@@ -244,7 +244,7 @@ export default function App() {
               Contato
             </button>
 
-            <a href="mailto:fernandaopitacio@gmail.com">
+            <a href="mailto:fernandaopitacio@gmail.com?subject=Contato%20pelo%20portf%C3%B3lio">
               E-mail <ArrowUpRight size={12} />
             </a>
           </nav>
