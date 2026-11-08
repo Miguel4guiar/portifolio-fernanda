@@ -6,12 +6,12 @@
 @tailwind utilities;
 
 :root {
-  --ink: #29201f;
-  --paper: #f4efe5;
-  --rose: #d99d91;
+   --ink: #000000;
+  --paper: #ffffff;
+  --rose: #ffffff;
   --wine: #743f46;
-  --sage: #aebba8;
-  --lilac: #c8bfd8;
+  --sage: #ffffff;
+  --lilac: #ffffff;
   --muted: #716d67;
 
   color: var(--ink);
