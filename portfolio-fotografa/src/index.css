@@ -542,6 +542,50 @@ main {
   color: #000000 !important;
 }
 
+/* FUNDO BRANCO EM TODO O SITE */
+
+html,
+body,
+#root,
+#root > div,
+main {
+  background-color: #ffffff !important;
+}
+
+/* Galeria */
+.photo-rail {
+  background-color: #ffffff !important;
+}
+
+/* Sobre e Contato */
+.section-view,
+.text-panel,
+.about-panel,
+.contact-panel {
+  background-color: #ffffff !important;
+}
+
+/* Menu lateral */
+.sidebar,
+.sidebar-content {
+  background-color: #ffffff !important;
+}
+
+/* Remove possíveis fundos escuros dos containers */
+.app,
+.app-shell,
+.main-layout,
+.main-content,
+.content-area {
+  background-color: #ffffff !important;
+}
+
+/* Mantém os textos pretos */
+.about-panel *,
+.contact-panel * {
+  color: #000000;
+}
+
 /* TABLETS E CELULARES */
 
 @media (max-width: 900px) {
