@@ -4,6 +4,7 @@ import { ArrowUpRight, Instagram } from 'lucide-react';
 import image from '../src/data/_P3_1145.jpg';
 import { useManagedPhotos } from './lib/useManagedPhotos.js';
 import Lightbox from './components/ui/Lightbox.jsx';
+import logoFeshoots from '../src/logo-feshoots.png';
 
 const CATEGORIES = [
   { value: 'All', label: 'TODOS' },
