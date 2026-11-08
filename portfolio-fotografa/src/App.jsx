@@ -188,11 +188,11 @@ export default function App() {
       {/* MENU LATERAL */}
       <header className="sidebar">
         <button className="brand" onClick={() => chooseView('work')}>
-  <img src={logoFeshoots} alt="Feshoots — Fotografia e direção criativa" />
+      <img src={logoFeshoots} alt="Feshoots — Fotografia e direção criativa" />
 
-          <span>Fotografia &amp; direção criativa</span>
+     
         </button>
-
+     <span>Fotografia &amp; direção criativa</span>
         <button
           className="menu-toggle"
           type="button"
