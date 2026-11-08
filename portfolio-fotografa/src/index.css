@@ -598,7 +598,25 @@ main {
   height: auto;
   object-fit: contain;
 }
+.brand {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
 
+.brand img {
+  display: block;
+  margin: 0;
+}
+
+.brand span {
+  display: block;
+  width: 100%;
+  margin-top: 5px;
+  padding-left: 0;
+  text-align: left;
+}
 @media (max-width: 900px) {
   .brand {
     width: 115px;

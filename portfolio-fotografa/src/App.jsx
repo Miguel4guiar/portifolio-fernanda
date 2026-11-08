@@ -190,9 +190,9 @@ export default function App() {
         <button className="brand" onClick={() => chooseView('work')}>
       <img src={logoFeshoots} alt="Feshoots — Fotografia e direção criativa" />
 
-     
+          <span>Fotografia &amp; direção criativa</span>
         </button>
-     <span>Fotografia &amp; direção criativa</span>
+
         <button
           className="menu-toggle"
           type="button"
