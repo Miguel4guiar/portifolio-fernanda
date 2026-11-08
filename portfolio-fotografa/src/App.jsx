@@ -4,7 +4,7 @@ import { ArrowUpRight, Instagram } from 'lucide-react';
 import image from '../src/data/_P3_1145.jpg';
 import { useManagedPhotos } from './lib/useManagedPhotos.js';
 import Lightbox from './components/ui/Lightbox.jsx';
-import logoFeshoots from '../src/logo-feshoots.png';
+import logoFeshoots from '../src/data/logo-feshoots.png';
 
 const CATEGORIES = [
   { value: 'All', label: 'TODOS' },
@@ -187,12 +187,9 @@ export default function App() {
     <main>
       {/* MENU LATERAL */}
       <header className="sidebar">
-        <button
-          className="brand"
-          type="button"
-          onClick={() => chooseCategory('All')}
-        >
-          FESHOOTS
+        <button className="brand" onClick={() => chooseView('work')}>
+  <img src={logoFeshoots} alt="Feshoots — Fotografia e direção criativa" />
+
           <span>Fotografia &amp; direção criativa</span>
         </button>
 
