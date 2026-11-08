@@ -594,18 +594,18 @@ main {
 .brand img {
   display: block;
   width: 100%;
-  max-width: 190px;
+  max-width: 145px;
   height: auto;
   object-fit: contain;
 }
 
 @media (max-width: 900px) {
   .brand {
-    width: 145px;
+    width: 115px;
   }
 
   .brand img {
-    max-width: 145px;
+    max-width: 115px;
   }
 }
 /* TABLETS E CELULARES */
