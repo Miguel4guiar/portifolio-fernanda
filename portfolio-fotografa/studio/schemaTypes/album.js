@@ -10,7 +10,7 @@ export default {
   ],
   fields: [
     { name: 'title', title: 'Nome do álbum / projeto', type: 'string', group: 'content', validation: (Rule) => Rule.required().max(100) },
-    { name: 'category', title: 'Categoria', type: 'string', group: 'content', options: { list: [{ title: 'Trap / Rap', value: 'TRAP / RAP' }, { title: 'Pop', value: 'POP' }, { title: 'Backstage', value: 'BACKSTAGE' }, { title: 'Editorial', value: 'EDITORIAL' }] }, validation: (Rule) => Rule.required() },
+    { name: 'category', title: 'Categoria', type: 'string', group: 'content', options: { list: [{ title: 'Trap / Rap', value: 'TRAP / RAP' }, { title: 'Pop', value: 'POP' }, { title: 'Comercial', value: 'COMERCIAL' }, { title: 'Editorial', value: 'EDITORIAL' }] }, validation: (Rule) => Rule.required() },
     { name: 'artist', title: 'Artista / cliente', type: 'string', group: 'content' },
     { name: 'year', title: 'Ano', type: 'number', group: 'content', initialValue: new Date().getFullYear() },
     { name: 'description', title: 'Descrição', type: 'text', rows: 3, group: 'content' },

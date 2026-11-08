@@ -25,7 +25,7 @@ export default {
         list: [
           { title: 'Trap/Rap', value: 'Trap/Rap' },
           { title: 'Pop', value: 'Pop' },
-          { title: 'Backstage', value: 'Backstage' },
+          { title: 'Comercial', value: 'Comercial' },
           { title: 'Editorial', value: 'Editorial' },
         ],
         layout: 'radio',

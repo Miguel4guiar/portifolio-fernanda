@@ -9,7 +9,7 @@ const CATEGORIES = [
   { value: 'All', label: 'TODOS' },
   { value: 'TRAP / RAP', label: 'TRAP / RAP' },
   { value: 'POP', label: 'POP' },
-  { value: 'BACKSTAGE', label: 'BACKSTAGE' },
+  { value: 'COMERCIAL', label: 'COMERCIAL' },
   { value: 'EDITORIAL', label: 'EDITORIAL' },
 ];
 

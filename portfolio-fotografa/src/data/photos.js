@@ -4,7 +4,7 @@
  * Em produção, este arquivo é substituído por um fetch ao CMS
  * (ver src/lib/cms.js para o adapter).
  */
-export const CATEGORIES = ['All', 'Trap/Rap', 'Pop', 'Backstage', 'Editorial'];
+export const CATEGORIES = ['All', 'Trap/Rap', 'Pop', 'Comercial', 'Editorial'];
 
 export const photos = [
   {
@@ -20,7 +20,7 @@ export const photos = [
   {
     id: 'ph-002',
     title: 'Bastidor 04h',
-    category: 'Backstage',
+    category: 'Comercial',
     artist: 'Marina Sena',
     year: 2023,
     event: 'Turnê De Primeira',
@@ -60,7 +60,7 @@ export const photos = [
   {
     id: 'ph-006',
     title: 'Camarim 3',
-    category: 'Backstage',
+    category: 'Comercial',
     artist: 'Djonga',
     year: 2021,
     event: 'Turnê Heresia',
