@@ -245,14 +245,7 @@ export default function App() {
   
           </nav>
 
-          <a
-            className="instagram"
-            href="https://www.instagram.com/feshoots"
-            target="_blank"
-            rel="noreferrer"
-          >
-            Instagram <ArrowUpRight size={12} />
-          </a>
+        
         </div>
 
         <div className="sidebar-footer">
