@@ -109,13 +109,7 @@ export default function Navbar() {
                 </motion.li>
               ))}
             </ul>
-            <div className="flex items-center gap-6 border-t border-[var(--ink)]/20 pt-6">
-      
-
-              <a href="https://instagram.com" target="_blank" rel="noreferrer" aria-label="Instagram" className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest2 text-[var(--ink)] hover:text-[var(--wine)]">
-                <Instagram size={16} /> Instagram
-              </a>
-            </div>
+          
           </motion.div>
         )}
       </AnimatePresence>
