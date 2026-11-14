@@ -9,7 +9,7 @@ import logoFeshoots from '../src/data/logo-feshoots.png';
 const CATEGORIES = [
   { value: 'All', label: 'TODOS' },
   { value: 'TRAP / RAP', label: 'TRAP / RAP' },
-  { value: 'POP', label: 'POP' },
+  
   { value: 'COMERCIAL', label: 'COMERCIAL' },
   { value: 'EDITORIAL', label: 'EDITORIAL' },
 ];
