@@ -4,7 +4,7 @@
  * Em produção, este arquivo é substituído por um fetch ao CMS
  * (ver src/lib/cms.js para o adapter).
  */
-export const CATEGORIES = ['All', 'Trap/Rap', 'Pop', 'Comercial', 'Editorial'];
+export const CATEGORIES = ['All', 'Trap/Rap', 'Comercial', 'Editorial'];
 
 export const photos = [
   {
