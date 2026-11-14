@@ -86,9 +86,9 @@ export default function Lightbox({ photo, onClose, onPrev, onNext }) {
                     )}
                   </div>
 
-                  {/* Texto / Legenda longa do Sanity com leitura limpa e scroll caso seja gigante */}
+                  {/* Texto / Legenda longa do Sanity com barra de rolagem personalizada */}
                   {(photo.event || photo.description || photo.caption || (photo.artist && photo.title)) && (
-                    <div className="mt-2 max-h-[24svh] overflow-y-auto pr-1 text-xs leading-relaxed text-smoke/90 sm:max-h-[20svh] sm:text-[13px]">
+                    <div className="lightbox-scroll mt-2 max-h-[24svh] overflow-y-auto pr-3 text-xs leading-relaxed text-smoke/90 sm:max-h-[20svh] sm:text-[13px]">
                       {photo.artist && photo.title && (
                         <p className="font-bold text-bone/90">{photo.title}</p>
                       )}
