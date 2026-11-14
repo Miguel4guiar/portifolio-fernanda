@@ -309,6 +309,7 @@ main {
   grid-template-columns: 48px minmax(120px, 1fr) auto;
   gap: 10px;
   align-items: end;
+  color: var(--ink); /* Deixa o número (01 / 02) e o texto base pretos */
   font-size: 8px;
   line-height: 1;
   white-space: nowrap;
@@ -316,13 +317,15 @@ main {
 
 .photo-frame figcaption strong {
   overflow: hidden;
+  color: var(--ink); /* Deixa o título principal (Entrelinhas) preto */
   font-size: 10px;
   font-weight: 700;
   text-overflow: ellipsis;
 }
 
+.photo-frame figcaption span,
 .photo-frame figcaption span:last-child {
-  color: #7c7770;
+  color: var(--ink); /* Deixa o ano (2026) e a categoria pretos */
 }
 
 .no-image {
