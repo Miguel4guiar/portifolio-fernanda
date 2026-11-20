@@ -1,4 +1,3 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
 
 @tailwind base;
@@ -6,7 +5,7 @@
 @tailwind utilities;
 
 :root {
-   --ink: #000000;
+  --ink: #000000;
   --paper: #ffffff;
   --rose: #ffffff;
   --wine: #743f46;
@@ -72,6 +71,7 @@ main {
 }
 
 .brand {
+  width: 100%;
   padding: 0;
   background: transparent;
   text-align: left;
@@ -80,6 +80,14 @@ main {
   font-weight: 700;
   line-height: 1.25;
   letter-spacing: -.06em;
+}
+
+.brand img {
+  display: block;
+  width: 100%;
+  max-width: 145px;
+  height: auto;
+  object-fit: contain;
 }
 
 .brand span {
@@ -194,7 +202,7 @@ main {
 /* GALERIA */
 
 .photo-rail {
-  background: #f5f5f5;
+  background: #ffffff;
   height: 100svh;
   margin-left: 246px;
   padding: 38px 22px;
@@ -223,7 +231,7 @@ main {
   background: var(--wine);
 }
 
-/* FOTOGRAFIAS */
+/* FOTOGRAFIAS - SEM CORTES EM QUALQUER TELA */
 
 .photo-frame {
   width: auto;
@@ -236,34 +244,25 @@ main {
 .photo-frame button {
   position: relative;
   height: calc(100% - 42px);
-  min-width: 260px;
+  min-width: auto;
   padding: 0;
   overflow: hidden;
-  background: var(--sage);
+  background: transparent;
   cursor: zoom-in;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .photo-frame img {
   display: block;
   width: auto;
   height: 100%;
-  max-width: min(68vw, 920px);
-  object-fit: cover;
+  max-width: min(85vw, 1100px);
+  object-fit: contain;
   transition:
     filter 600ms ease,
     transform 900ms cubic-bezier(.2, .7, .2, 1);
-}
-
-.photo-frame.frame-0 img {
-  aspect-ratio: 4 / 5;
-}
-
-.photo-frame.frame-1 img {
-  aspect-ratio: 3 / 2;
-}
-
-.photo-frame.frame-2 img {
-  aspect-ratio: 5 / 7;
 }
 
 .photo-frame button:hover img {
@@ -309,7 +308,7 @@ main {
   grid-template-columns: 48px minmax(120px, 1fr) auto;
   gap: 10px;
   align-items: end;
-  color: var(--ink); /* Deixa o número (01 / 02) e o texto base pretos */
+  color: var(--ink);
   font-size: 8px;
   line-height: 1;
   white-space: nowrap;
@@ -317,7 +316,7 @@ main {
 
 .photo-frame figcaption strong {
   overflow: hidden;
-  color: var(--ink); /* Deixa o título principal (Entrelinhas) preto */
+  color: var(--ink);
   font-size: 10px;
   font-weight: 700;
   text-overflow: ellipsis;
@@ -325,7 +324,7 @@ main {
 
 .photo-frame figcaption span,
 .photo-frame figcaption span:last-child {
-  color: var(--ink); /* Deixa o ano (2026) e a categoria pretos */
+  color: var(--ink);
 }
 
 .no-image {
@@ -364,8 +363,6 @@ main {
   min-height: 100%;
   padding: clamp(36px, 5vw, 76px);
 }
-
-/* Mesmo fundo bege nas duas seções */
 
 .about-panel,
 .contact-panel {
@@ -507,26 +504,6 @@ main {
   max-height: 75svh;
 }
 
-/* Garantir que links também fiquem pretos */
-.about-panel a,
-.contact-panel a {
-  color: #000000;
-}
-
-/* Manter os ícones na mesma cor */
-.about-panel svg,
-.contact-panel svg {
-  color: #000000;
-}
-
-/* Manter os textos de identificação pretos */
-.about-panel .panel-index,
-.contact-panel .panel-index,
-.about-panel .clients span,
-.contact-panel .contact-note {
-  color: #000000;
-}
-
 /* FORÇAR TODOS OS TEXTOS DO SOBRE E CONTATO EM PRETO */
 
 .about-panel h2,
@@ -536,11 +513,12 @@ main {
 .contact-panel h2,
 .contact-panel p,
 .contact-panel span,
-.contact-panel a {
+.contact-panel a,
+.about-panel *,
+.contact-panel * {
   color: #000000 !important;
 }
 
-/* Ícones */
 .about-panel svg,
 .contact-panel svg {
   color: #000000 !important;
@@ -552,30 +530,14 @@ html,
 body,
 #root,
 #root > div,
-main {
-  background-color: #ffffff !important;
-}
-
-/* Galeria */
-.photo-rail {
-  background-color: #ffffff !important;
-}
-
-/* Sobre e Contato */
+main,
+.photo-rail,
 .section-view,
 .text-panel,
 .about-panel,
-.contact-panel {
-  background-color: #ffffff !important;
-}
-
-/* Menu lateral */
+.contact-panel,
 .sidebar,
-.sidebar-content {
-  background-color: #ffffff !important;
-}
-
-/* Remove possíveis fundos escuros dos containers */
+.sidebar-content,
 .app,
 .app-shell,
 .main-layout,
@@ -584,59 +546,33 @@ main {
   background-color: #ffffff !important;
 }
 
-/* Mantém os textos pretos */
-.about-panel *,
-.contact-panel * {
-  color: #000000;
-}
-.brand {
-  width: 100%;
-  background: transparent;
-  padding: 0;
-}
+/* BARRA DE ROLAGEM MINIMALISTA PARA A LEGENDA DO LIGHTBOX */
 
-.brand img {
-  display: block;
-  width: 100%;
-  max-width: 145px;
-  height: auto;
-  object-fit: contain;
-}
-/* Barra de rolagem minimalista para a legenda do Lightbox */
 .lightbox-scroll {
-  scrollbar-width: thin; /* Firefox */
-  scrollbar-color: rgba(244, 239, 229, 0.3) transparent; /* Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(244, 239, 229, 0.3) transparent;
 }
 
 .lightbox-scroll::-webkit-scrollbar {
-  width: 3px; /* Largura bem fina */
+  width: 3px;
 }
 
 .lightbox-scroll::-webkit-scrollbar-track {
-  background: transparent; /* Fundo transparente */
+  background: transparent;
 }
 
 .lightbox-scroll::-webkit-scrollbar-thumb {
-  background: rgba(244, 239, 229, 0.25); /* Tracinho sutil translúcido */
+  background: rgba(244, 239, 229, 0.25);
   border-radius: 9999px;
 }
 
 .lightbox-scroll::-webkit-scrollbar-thumb:hover {
-  background: var(--wine); /* Destaque ao passar o mouse */
+  background: var(--wine);
 }
-@media (max-width: 900px) {
-  .brand {
-    width: 115px;
-  }
 
-  .brand img {
-    max-width: 115px;
-  }
-}
 /* TABLETS E CELULARES */
 
 @media (max-width: 900px) {
-
   .sidebar {
     position: sticky;
     top: 0;
@@ -651,7 +587,12 @@ main {
   }
 
   .brand {
+    width: 115px;
     font-size: 15px;
+  }
+
+  .brand img {
+    max-width: 115px;
   }
 
   .brand span {
@@ -707,41 +648,48 @@ main {
     display: none;
   }
 
-  /* GALERIA MOBILE */
+  /* GALERIA MOBILE - SEM CORTES */
 
   .photo-rail {
     width: 100%;
     height: calc(100svh - 64px);
-    min-height: 540px;
+    min-height: 460px;
     margin-left: 0;
     padding: 14px 14px 24px;
     gap: 14px;
+    align-items: center;
     scroll-snap-type: x mandatory;
     overscroll-behavior-x: contain;
     -webkit-overflow-scrolling: touch;
   }
 
   .photo-frame {
-    width: min(84vw, 470px);
+    width: auto;
+    max-width: 88vw;
     height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     scroll-snap-align: center;
   }
 
   .photo-frame button {
-    width: 100%;
+    width: auto;
     height: calc(100% - 48px);
     min-width: 0;
+    background: transparent;
   }
 
   .photo-frame img,
   .photo-frame.frame-0 img,
   .photo-frame.frame-1 img,
   .photo-frame.frame-2 img {
-    width: 100%;
-    height: 100%;
-    max-width: none;
+    width: auto;
+    height: auto;
+    max-width: 88vw;
+    max-height: 100%;
     aspect-ratio: auto;
-    object-fit: cover;
+    object-fit: contain;
   }
 
   .photo-frame figcaption {
@@ -776,8 +724,6 @@ main {
     min-height: 0;
     padding: 34px 26px;
   }
-
-  /* FOTO ACIMA DO TEXTO NO SOBRE */
 
   .about-layout {
     grid-template-columns: 1fr;
@@ -828,7 +774,6 @@ main {
 /* CELULARES PEQUENOS */
 
 @media (max-width: 480px) {
-
   .sidebar {
     padding: 13px 16px;
   }
@@ -839,7 +784,15 @@ main {
   }
 
   .photo-frame {
-    width: 88vw;
+    width: auto;
+    max-width: 90vw;
+  }
+
+  .photo-frame img,
+  .photo-frame.frame-0 img,
+  .photo-frame.frame-1 img,
+  .photo-frame.frame-2 img {
+    max-width: 90vw;
   }
 
   .section-view {
@@ -872,7 +825,6 @@ main {
 /* ACESSIBILIDADE */
 
 @media (prefers-reduced-motion: reduce) {
-
   *,
   *::before,
   *::after {
