@@ -2,8 +2,19 @@ import * as Dialog from '@radix-ui/react-dialog';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 
+// Extrai o ID do vídeo de qualquer formato de link do YouTube (watch, youtu.be, shorts, embed)
+function getYouTubeId(url) {
+  if (!url || typeof url !== 'string') return null;
+  const regExp =
+    /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?|shorts)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
+  const match = url.match(regExp);
+  return match ? match[1] : null;
+}
+
 export default function Lightbox({ photo, onClose, onPrev, onNext }) {
   const photoImage = photo?.image || photo?.thumbnail || photo?.videoThumbnail;
+  const videoLink = photo?.videoUrl || photo?.videoAsset || photo?.youtubeUrl || photo?.url;
+  const youtubeId = getYouTubeId(videoLink);
 
   return (
     <Dialog.Root open={!!photo} onOpenChange={(v) => !v && onClose()}>
@@ -35,7 +46,7 @@ export default function Lightbox({ photo, onClose, onPrev, onNext }) {
                 <Dialog.Close asChild>
                   <button
                     aria-label="Fechar"
-                    className="absolute right-3 top-3 z-10 flex h-10 w-10 items-center justify-center text-smoke transition-colors hover:text-acid sm:right-6 sm:top-6"
+                    className="absolute right-3 top-3 z-20 flex h-10 w-10 items-center justify-center text-smoke transition-colors hover:text-acid sm:right-6 sm:top-6"
                   >
                     <X size={24} className="sm:hidden" />
                     <X size={28} className="hidden sm:block" />
@@ -45,8 +56,8 @@ export default function Lightbox({ photo, onClose, onPrev, onNext }) {
                 {/* Seta Anterior */}
                 <button
                   onClick={onPrev}
-                  aria-label="Foto anterior"
-                  className="absolute left-1 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center text-smoke transition-colors hover:text-acid sm:left-3 md:left-8"
+                  aria-label="Anterior"
+                  className="absolute left-1 top-1/2 z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center text-smoke transition-colors hover:text-acid sm:left-3 md:left-8"
                 >
                   <ChevronLeft size={26} className="sm:hidden" />
                   <ChevronLeft size={34} className="hidden sm:block" />
@@ -55,28 +66,50 @@ export default function Lightbox({ photo, onClose, onPrev, onNext }) {
                 {/* Seta Próxima */}
                 <button
                   onClick={onNext}
-                  aria-label="Próxima foto"
-                  className="absolute right-1 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center text-smoke transition-colors hover:text-acid sm:right-3 md:right-8"
+                  aria-label="Próximo"
+                  className="absolute right-1 top-1/2 z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center text-smoke transition-colors hover:text-acid sm:right-3 md:right-8"
                 >
                   <ChevronRight size={26} className="sm:hidden" />
                   <ChevronRight size={34} className="hidden sm:block" />
                 </button>
 
-                {/* Container da Imagem: se adapta automaticamente ao espaço acima do texto */}
+                {/* Container da Mídia: Vídeo (YouTube ou MP4) ou Imagem */}
                 <div className="flex min-h-0 w-full flex-1 items-center justify-center py-2">
-                  <motion.img
-                    key={photo.id}
-                    src={photoImage}
-                    alt={`${photo.title || ''} — ${photo.artist || ''}`}
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="max-h-full max-w-full object-contain"
-                  />
+                  {youtubeId ? (
+                    <div className="aspect-video w-full max-w-4xl overflow-hidden bg-black shadow-2xl">
+                      <iframe
+                        key={youtubeId}
+                        src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1&playsinline=1&rel=0`}
+                        title={photo.title || 'Vídeo'}
+                        className="h-full w-full border-0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowFullScreen
+                      />
+                    </div>
+                  ) : videoLink ? (
+                    <video
+                      key={videoLink}
+                      src={videoLink}
+                      poster={photoImage}
+                      controls
+                      autoPlay
+                      playsInline
+                      className="max-h-full max-w-full bg-black object-contain shadow-2xl"
+                    />
+                  ) : (
+                    <motion.img
+                      key={photo.id}
+                      src={photoImage}
+                      alt={`${photo.title || ''} — ${photo.artist || ''}`}
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="max-h-full max-w-full object-contain"
+                    />
+                  )}
                 </div>
 
-                {/* Área da Legenda: responsiva e preparada para textos longos */}
+                {/* Área da Legenda */}
                 <div className="mt-3 w-full max-w-2xl shrink-0 border-t border-smoke/20 pt-3 font-mono text-smoke sm:mt-4 sm:pt-4">
-                  {/* Linha superior: Artista / Título e Ano */}
                   <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 text-[11px] uppercase tracking-wider sm:text-xs">
                     <span className="font-bold text-bone">
                       {photo.artist || photo.title}
@@ -86,7 +119,6 @@ export default function Lightbox({ photo, onClose, onPrev, onNext }) {
                     )}
                   </div>
 
-                  {/* Texto / Legenda longa do Sanity com barra de rolagem personalizada */}
                   {(photo.event || photo.description || photo.caption || (photo.artist && photo.title)) && (
                     <div className="lightbox-scroll mt-2 max-h-[24svh] overflow-y-auto pr-3 text-xs leading-relaxed text-smoke/90 sm:max-h-[20svh] sm:text-[13px]">
                       {photo.artist && photo.title && (
