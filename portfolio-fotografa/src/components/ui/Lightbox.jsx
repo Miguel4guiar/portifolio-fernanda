@@ -2,7 +2,6 @@ import * as Dialog from '@radix-ui/react-dialog';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 
-// Extrai o ID do vídeo de qualquer formato de link do YouTube (watch, youtu.be, shorts, embed)
 function getYouTubeId(url) {
   if (!url || typeof url !== 'string') return null;
   const regExp =
@@ -36,7 +35,7 @@ export default function Lightbox({ photo, onClose, onPrev, onNext }) {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.97 }}
                 transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-                className="fixed inset-0 z-[81] flex h-[100svh] flex-col items-center justify-between px-10 pb-6 pt-14 sm:px-16 sm:pb-8 sm:pt-16 md:px-24"
+                className="fixed inset-0 z-[81] flex h-[100svh] flex-col items-center justify-center gap-4 px-10 py-14 sm:gap-6 sm:px-16 md:px-24"
               >
                 <Dialog.Title className="sr-only">
                   {photo.title || photo.artist}
@@ -73,10 +72,10 @@ export default function Lightbox({ photo, onClose, onPrev, onNext }) {
                   <ChevronRight size={34} className="hidden sm:block" />
                 </button>
 
-                {/* Container da Mídia: Vídeo (YouTube ou MP4) ou Imagem */}
-                <div className="flex min-h-0 w-full flex-1 items-center justify-center py-2">
+                {/* Container da Mídia com altura controlada para nunca invadir o texto */}
+                <div className="flex min-h-0 w-full max-w-4xl flex-1 items-center justify-center overflow-hidden">
                   {youtubeId ? (
-                    <div className="aspect-video w-full max-w-4xl overflow-hidden bg-black shadow-2xl">
+                    <div className="aspect-video max-h-full w-full max-w-[min(100%,calc(56svh*16/9))] overflow-hidden bg-black shadow-2xl">
                       <iframe
                         key={youtubeId}
                         src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1&playsinline=1&rel=0`}
@@ -108,8 +107,8 @@ export default function Lightbox({ photo, onClose, onPrev, onNext }) {
                   )}
                 </div>
 
-                {/* Área da Legenda */}
-                <div className="mt-3 w-full max-w-2xl shrink-0 border-t border-smoke/20 pt-3 font-mono text-smoke sm:mt-4 sm:pt-4">
+                {/* Área da Legenda alinhada com a mesma largura máxima do player */}
+                <div className="w-full max-w-4xl shrink-0 border-t border-smoke/20 pt-3 font-mono text-smoke sm:pt-4">
                   <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 text-[11px] uppercase tracking-wider sm:text-xs">
                     <span className="font-bold text-bone">
                       {photo.artist || photo.title}
@@ -120,7 +119,7 @@ export default function Lightbox({ photo, onClose, onPrev, onNext }) {
                   </div>
 
                   {(photo.event || photo.description || photo.caption || (photo.artist && photo.title)) && (
-                    <div className="lightbox-scroll mt-2 max-h-[24svh] overflow-y-auto pr-3 text-xs leading-relaxed text-smoke/90 sm:max-h-[20svh] sm:text-[13px]">
+                    <div className="lightbox-scroll mt-2 max-h-[22svh] overflow-y-auto pr-3 text-left text-xs leading-relaxed text-smoke/90 sm:max-h-[20svh] sm:text-[13px]">
                       {photo.artist && photo.title && (
                         <p className="font-bold text-bone/90">{photo.title}</p>
                       )}

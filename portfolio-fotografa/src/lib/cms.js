@@ -15,7 +15,8 @@ function getYouTubeThumb(url) {
   const match = url.match(
     /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?|shorts)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/
   );
-  return match ? `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg` : '';
+  // maxresdefault entrega a capa em HD 16:9 sem as tarjas pretas em cima e embaixo
+  return match ? `https://img.youtube.com/vi/${match[1]}/maxresdefault.jpg` : '';
 }
 
 const PHOTO_FIELDS = `"id": _id, title, category, artist, year, event, description, mediaType,
