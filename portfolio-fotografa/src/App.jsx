@@ -1,4 +1,3 @@
-
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { ArrowUpRight, Instagram } from 'lucide-react';
 import image from '../src/data/_P3_1145.jpg';
@@ -12,6 +11,15 @@ const CATEGORIES = [
   { value: 'COMERCIAL', label: 'COMERCIAL' },
   { value: 'ENTRELINHAS', label: 'ENTRELINHAS' },
 ];
+
+// Extrai a miniatura oficial do YouTube a partir de qualquer formato de link
+function getYouTubeThumb(url) {
+  if (!url) return null;
+  const match = url.match(
+    /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?|shorts)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/
+  );
+  return match ? `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg` : null;
+}
 
 export default function App() {
   const { photos, albums, loading, error } = useManagedPhotos();
@@ -38,21 +46,23 @@ export default function App() {
     [albums, category]
   );
 
+  // Filtra fotos e vídeos avulsos (que têm imagem OU link de vídeo)
   const visiblePhotos = useMemo(
     () =>
-      photos.filter(
-        (p) =>
+      photos.filter((p) => {
+        const videoLink = p.videoUrl || p.youtubeUrl || p.url || p.video;
+        return (
           p.showInGallery !== false &&
-          (p.image || p.videoUrl) &&
+          (p.image || videoLink) &&
           categoryMatches(p.category)
-      ),
+        );
+      }),
     [photos, category]
   );
 
   const albumPhotos = activeAlbum?.photos || [];
   const lightboxPhotos = activeAlbum ? albumPhotos : visiblePhotos;
 
-  // Abre o álbum diretamente nas fotografias, sem painel de apresentação.
   const openAlbum = (album) => {
     setActiveAlbum(album);
     setActivePhoto(null);
@@ -63,11 +73,6 @@ export default function App() {
         behavior: 'smooth',
       });
     });
-  };
-
-  const closeAlbum = () => {
-    setActiveAlbum(null);
-    setActivePhoto(null);
   };
 
   const navigate = (direction) => {
@@ -87,7 +92,6 @@ export default function App() {
 
   useEffect(() => {
     const rail = railRef.current;
-
     if (!rail) return;
 
     const horizontalWheel = (event) => {
@@ -127,7 +131,6 @@ export default function App() {
     };
 
     window.addEventListener('keydown', onKey);
-
     return () => window.removeEventListener('keydown', onKey);
   }, [activePhoto, lightboxPhotos]);
 
@@ -163,7 +166,6 @@ export default function App() {
     }
 
     setDragging(true);
-
     dragRef.current = {
       x: event.pageX,
       scrollLeft: railRef.current.scrollLeft,
@@ -172,12 +174,9 @@ export default function App() {
 
   const moveDrag = (event) => {
     if (!dragging || !railRef.current) return;
-
     event.preventDefault();
-
     railRef.current.scrollLeft =
-      dragRef.current.scrollLeft -
-      (event.pageX - dragRef.current.x);
+      dragRef.current.scrollLeft - (event.pageX - dragRef.current.x);
   };
 
   const stopDrag = () => setDragging(false);
@@ -187,8 +186,7 @@ export default function App() {
       {/* MENU LATERAL */}
       <header className="sidebar">
         <button className="brand" onClick={() => chooseView('work')}>
-      <img src={logoFeshoots} alt="Feshoots — Fotografia e direção criativa" />
-
+          <img src={logoFeshoots} alt="Feshoots — Fotografia e direção criativa" />
           <span>Fotografia &amp; direção criativa</span>
         </button>
 
@@ -201,21 +199,14 @@ export default function App() {
           {menuOpen ? 'Fechar ×' : 'Menu +'}
         </button>
 
-        <div
-          className={`sidebar-content ${menuOpen ? 'open' : ''}`}
-        >
-          <nav
-            className="category-nav"
-            aria-label="Categorias da galeria"
-          >
+        <div className={`sidebar-content ${menuOpen ? 'open' : ''}`}>
+          <nav className="category-nav" aria-label="Categorias da galeria">
             {CATEGORIES.map((item) => (
               <button
                 type="button"
                 key={item.value}
                 className={
-                  category === item.value && view === 'work'
-                    ? 'active'
-                    : ''
+                  category === item.value && view === 'work' ? 'active' : ''
                 }
                 onClick={() => chooseCategory(item.value)}
               >
@@ -240,18 +231,12 @@ export default function App() {
             >
               Contato
             </button>
-
-  
           </nav>
-
-        
         </div>
 
         <div className="sidebar-footer">
           <span className="short-rule" />
-
           <p>Imagem, música e cultura contemporânea.</p>
-
           <p>
             © {new Date().getFullYear()} Feshoots
             <br />
@@ -271,15 +256,12 @@ export default function App() {
           onMouseLeave={stopDrag}
         >
           {loading && (
-            <div className="loading-panel">
-              Carregando arquivo...
-            </div>
+            <div className="loading-panel">Carregando arquivo...</div>
           )}
 
           {!loading && error && (
             <div className="loading-panel">
-              Não foi possível carregar as imagens.
-              Verifique a conexão com o Sanity.
+              Não foi possível carregar as imagens. Verifique a conexão com o Sanity.
             </div>
           )}
 
@@ -307,12 +289,10 @@ export default function App() {
 
                   <span className="album-count">
                     {album.photos.length}{' '}
-                    {album.photos.length === 1 ? 'FOTO' : 'FOTOS'}
+                    {album.photos.length === 1 ? 'ITEM' : 'ITENS'}
                   </span>
 
-                  <span className="view-photo">
-                    Abrir álbum ↗
-                  </span>
+                  <span className="view-photo">Abrir álbum ↗</span>
                 </button>
 
                 <figcaption>
@@ -320,9 +300,7 @@ export default function App() {
                     {String(index + 1).padStart(2, '0')} /{' '}
                     {String(visibleAlbums.length).padStart(2, '0')}
                   </span>
-
                   <strong>{album.title}</strong>
-
                   <span>
                     {album.category}
                     {album.year ? ` · ${album.year}` : ''}
@@ -331,15 +309,19 @@ export default function App() {
               </figure>
             ))}
 
-          {/* FOTOS DO ÁLBUM - SEM CABEÇALHO OU FUNDO BEGE */}
+          {/* FOTOS E VÍDEOS DENTRO DO ÁLBUM */}
           {!loading &&
             !error &&
             activeAlbum &&
             albumPhotos.map((photo, index) => {
+              const videoLink =
+                photo.videoUrl || photo.youtubeUrl || photo.url || photo.video;
+              const isVideo = photo.mediaType === 'video' || Boolean(videoLink);
               const photoImage =
                 photo.image ||
                 photo.thumbnail ||
-                photo.videoThumbnail;
+                photo.videoThumbnail ||
+                getYouTubeThumb(videoLink);
 
               return (
                 <figure
@@ -362,8 +344,10 @@ export default function App() {
                       <span className="no-image">VÍDEO</span>
                     )}
 
+                    {isVideo && <span className="album-count">VÍDEO ▶</span>}
+
                     <span className="view-photo">
-                      Ampliar ↗
+                      {isVideo ? 'Assistir ↗' : 'Ampliar ↗'}
                     </span>
                   </button>
 
@@ -372,33 +356,29 @@ export default function App() {
                       {String(index + 1).padStart(2, '0')} /{' '}
                       {String(albumPhotos.length).padStart(2, '0')}
                     </span>
-
-                    <strong>
-                      {photo.title || activeAlbum.title}
-                    </strong>
-
-                    <span>
-                      {photo.year || activeAlbum.year || ''}
-                    </span>
+                    <strong>{photo.title || activeAlbum.title}</strong>
+                    <span>{photo.year || activeAlbum.year || ''}</span>
                   </figcaption>
                 </figure>
               );
             })}
 
-          {/* FOTOS AVULSAS */}
+          {/* FOTOS E VÍDEOS AVULSOS (aparecem mesmo se houver álbuns) */}
           {!loading &&
             !error &&
             !activeAlbum &&
-            visibleAlbums.length === 0 &&
+            visiblePhotos.length > 0 &&
             visiblePhotos.map((photo, index) => {
+              const videoLink =
+                photo.videoUrl || photo.youtubeUrl || photo.url || photo.video;
               const isVideo =
-                photo.mediaType === 'video' ||
-                Boolean(photo.videoUrl);
+                photo.mediaType === 'video' || Boolean(videoLink);
 
               const photoImage =
                 photo.image ||
                 photo.thumbnail ||
-                photo.videoThumbnail;
+                photo.videoThumbnail ||
+                getYouTubeThumb(videoLink);
 
               return (
                 <figure
@@ -430,11 +410,11 @@ export default function App() {
                     )}
 
                     <span className="album-count">
-                      {isVideo ? 'FILME' : 'FOTOGRAFIA'}
+                      {isVideo ? 'FILME ▶' : 'FOTOGRAFIA'}
                     </span>
 
                     <span className="view-photo">
-                      Ampliar ↗
+                      {isVideo ? 'Assistir ↗' : 'Ampliar ↗'}
                     </span>
                   </button>
 
@@ -445,9 +425,7 @@ export default function App() {
                     </span>
 
                     <strong>
-                      {photo.title ||
-                        photo.artist ||
-                        'Projeto visual'}
+                      {photo.title || photo.artist || 'Projeto visual'}
                     </strong>
 
                     <span>
@@ -459,17 +437,13 @@ export default function App() {
               );
             })}
 
-          {/* MENSAGEM QUANDO NÃO EXISTIREM FOTOS */}
+          {/* MENSAGEM QUANDO NÃO EXISTIREM FOTOS OU VÍDEOS */}
           {!loading &&
             !error &&
-            (
-              (activeAlbum && albumPhotos.length === 0) ||
-              (
-                !activeAlbum &&
+            ((activeAlbum && albumPhotos.length === 0) ||
+              (!activeAlbum &&
                 visibleAlbums.length === 0 &&
-                visiblePhotos.length === 0
-              )
-            ) && (
+                visiblePhotos.length === 0)) && (
               <div className="loading-panel">
                 Nenhum projeto nesta categoria ainda.
               </div>
@@ -480,10 +454,7 @@ export default function App() {
       {/* SOBRE */}
       {view === 'about' && (
         <div className="section-view">
-          <section
-            className="text-panel about-panel"
-            id="sobre"
-          >
+          <section className="text-panel about-panel" id="sobre">
             <div className="about-layout">
               <div className="about-portrait">
                 <img
@@ -494,9 +465,7 @@ export default function App() {
               </div>
 
               <div className="about-copy">
-                <span className="panel-index">
-                  01 / Sobre
-                </span>
+                <span className="panel-index">01 / Sobre</span>
 
                 <h2>
                   Câmera na
@@ -506,27 +475,22 @@ export default function App() {
 
                 <div className="panel-columns">
                   <p>
-                    Fernanda Opitacio é diretora criativa
-                    atuando entre cultura, comunicação e
-                    imagem. Com base em São Paulo, desenvolve
-                    conceitos, campanhas e projetos que
-                    conectam narrativa, posicionamento e
-                    direção visual.
+                    Fernanda Opitacio é diretora criativa atuando entre
+                    cultura, comunicação e imagem. Com base em São Paulo,
+                    desenvolve conceitos, campanhas e projetos que conectam
+                    narrativa, posicionamento e direção visual.
                   </p>
 
                   <p>
-                    Seu trabalho investiga como ideias e
-                    narrativas ganham forma em imagem,
-                    linguagem e presença cultural, articulando
-                    estratégia criativa e construção estética
-                    em diferentes territórios da comunicação
-                    contemporânea.
+                    Seu trabalho investiga como ideias e narrativas ganham
+                    forma em imagem, linguagem e presença cultural,
+                    articulando estratégia criativa e construção estética em
+                    diferentes territórios da comunicação contemporânea.
                   </p>
                 </div>
 
                 <div className="clients">
                   <span>Áreas de atuação</span>
-
                   <p>
                     Shows · Retratos · Editorial
                     <br />
@@ -542,13 +506,8 @@ export default function App() {
       {/* CONTATO */}
       {view === 'contact' && (
         <div className="section-view">
-          <section
-            className="text-panel contact-panel"
-            id="contato"
-          >
-            <span className="panel-index">
-              02 / Contato
-            </span>
+          <section className="text-panel contact-panel" id="contato">
+            <span className="panel-index">02 / Contato</span>
 
             <h2>
               Vamos criar
@@ -578,8 +537,8 @@ export default function App() {
             </div>
 
             <p className="contact-note">
-              Para projetos, campanhas, shows e trabalhos
-              editoriais, entre em contato por e-mail.
+              Para projetos, campanhas, shows e trabalhos editoriais, entre em
+              contato por e-mail.
             </p>
           </section>
         </div>

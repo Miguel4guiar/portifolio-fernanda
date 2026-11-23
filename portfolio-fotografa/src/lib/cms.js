@@ -10,12 +10,22 @@ const client = isSanityConfigured
   ? createClient({ projectId, dataset, apiVersion: '2025-02-19', useCdn: false, perspective: 'published' })
   : null;
 
-const PHOTO_FIELDS = `"id": _id, title, category, artist, year, event, mediaType,
+function getYouTubeThumb(url) {
+  if (!url) return '';
+  const match = url.match(
+    /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?|shorts)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/
+  );
+  return match ? `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg` : '';
+}
+
+const PHOTO_FIELDS = `"id": _id, title, category, artist, year, event, description, mediaType,
   "image": coalesce(image.asset->url, photo.asset->url, coverImage.asset->url, thumbnail.asset->url),
   "thumbnail": coalesce(thumbnail.asset->url, image.asset->url, photo.asset->url, coverImage.asset->url),
   "videoThumbnail": videoThumbnail.asset->url, "videoAsset": video.asset->url, videoUrl,
   featured, "showInGallery": coalesce(showInGallery, true), "showInArchive": coalesce(showInArchive, true), orderRank, _createdAt`;
+
 const PHOTO_QUERY = `*[_type == "photo"] | order(coalesce(orderRank, 999999) asc, year desc, _createdAt desc) { ${PHOTO_FIELDS} }`;
+
 const ALBUM_QUERY = `*[_type == "album" && published != false] | order(coalesce(orderRank, 999999) asc, year desc, _createdAt desc) {
   "id": _id, title, category, artist, year, description,
   "cover": coverImage.asset->url,
@@ -23,28 +33,53 @@ const ALBUM_QUERY = `*[_type == "album" && published != false] | order(coalesce(
 }`;
 
 function normalize(item = {}) {
-  const image = item.image || item.thumbnail || item.videoThumbnail || '';
   const videoUrl = item.videoUrl || item.videoAsset || '';
-  return { ...item, id: item.id || item._id || `${item.title || 'media'}-${item._createdAt || Math.random().toString(36).slice(2)}`,
-    title: item.title || item.artist || 'Untitled project', artist: item.artist || 'Projeto visual',
-    category: item.category || (videoUrl ? 'Filme' : 'Fotografia'), image, thumbnail: item.thumbnail || image,
-    videoUrl, mediaType: item.mediaType || (videoUrl ? 'video' : 'image'),
-    showInGallery: item.showInGallery !== false, showInArchive: item.showInArchive !== false };
+  const ytThumb = getYouTubeThumb(videoUrl);
+  const image = item.image || item.thumbnail || item.videoThumbnail || ytThumb || '';
+
+  return {
+    ...item,
+    id: item.id || item._id || `${item.title || 'media'}-${item._createdAt || Math.random().toString(36).slice(2)}`,
+    title: item.title || item.artist || 'Untitled project',
+    artist: item.artist || 'Projeto visual',
+    category: item.category || (videoUrl ? 'Filme' : 'Fotografia'),
+    image,
+    thumbnail: item.thumbnail || image,
+    videoUrl,
+    mediaType: item.mediaType || (videoUrl ? 'video' : 'image'),
+    showInGallery: item.showInGallery !== false,
+    showInArchive: item.showInArchive !== false,
+  };
 }
 
 export async function getPhotos() {
   if (!client) return mockPhotos.map(normalize);
   const result = await client.fetch(PHOTO_QUERY);
-  return (Array.isArray(result) ? result : []).map(normalize).filter((item) => item.image || item.videoUrl);
+  return (Array.isArray(result) ? result : [])
+    .map(normalize)
+    .filter((item) => item.image || item.videoUrl);
 }
 
 export async function getAlbums() {
   if (!client) return [];
   const result = await client.fetch(ALBUM_QUERY);
-  return (Array.isArray(result) ? result : []).map((album) => ({
-    ...album,
-    photos: (album.photos || []).filter(Boolean).map(normalize).filter((photo) => photo.image || photo.videoUrl),
-  })).filter((album) => album.cover);
+  return (Array.isArray(result) ? result : [])
+    .map((album) => {
+      const normalizedPhotos = (album.photos || [])
+        .filter(Boolean)
+        .map(normalize)
+        .filter((photo) => photo.image || photo.videoUrl);
+
+      // Usa a coverImage do álbum ou, se não houver, a capa do primeiro item/vídeo
+      const cover = album.cover || normalizedPhotos[0]?.image || '';
+
+      return {
+        ...album,
+        cover,
+        photos: normalizedPhotos,
+      };
+    })
+    .filter((album) => album.cover || album.photos.length > 0);
 }
 
 export async function getFeaturedPhotos() {
@@ -55,7 +90,10 @@ export async function getFeaturedPhotos() {
 export function subscribeToPhotos(onChange, onError = () => {}) {
   if (!client) return () => {};
   const subscription = client.listen('*[_type in ["photo", "album"]]', {}, { visibility: 'query' }).subscribe({
-    next: () => Promise.all([getPhotos(), getAlbums()]).then(([photos, albums]) => onChange(photos, albums)).catch(onError),
+    next: () =>
+      Promise.all([getPhotos(), getAlbums()])
+        .then(([photos, albums]) => onChange(photos, albums))
+        .catch(onError),
     error: onError,
   });
   return () => subscription.unsubscribe();
