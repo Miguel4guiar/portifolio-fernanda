@@ -349,7 +349,7 @@ main {
   text-align: center;
 }
 
-/* SEÇÕES SOBRE E CONTATO */
+/* SEÇÕES PROJETOS, SOBRE E CONTATO */
 
 .section-view {
   height: 100svh;
@@ -364,9 +364,103 @@ main {
   padding: clamp(36px, 5vw, 76px);
 }
 
+.projects-panel,
 .about-panel,
 .contact-panel {
   background: var(--paper);
+}
+
+.panel-index {
+  display: block;
+  margin-bottom: 30px;
+  color: var(--wine);
+  font-size: 9px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.text-panel h2 {
+  margin: 0;
+  font-size: clamp(44px, 5.8vw, 86px);
+  font-weight: 700;
+  letter-spacing: -.085em;
+  line-height: .95;
+}
+
+/* PROJETOS - IMAGEM À ESQUERDA E TEXTO À DIREITA */
+
+.projects-list {
+  margin-top: 7vh;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(48px, 7vh, 88px);
+}
+
+.project-row {
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) minmax(0, 1.15fr);
+  align-items: center;
+  gap: clamp(28px, 5vw, 68px);
+  padding-bottom: clamp(40px, 6vh, 72px);
+  border-bottom: 1px solid rgba(23, 23, 20, 0.14);
+}
+
+.project-row:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.project-media {
+  width: 100%;
+  overflow: hidden;
+}
+
+.project-media img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 580px;
+  object-fit: contain;
+  object-position: left center;
+}
+
+.project-copy {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.project-meta {
+  display: block;
+  margin-bottom: 14px;
+  color: var(--wine) !important;
+  font-size: 9px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.project-copy h3 {
+  margin: 0;
+  color: #000000 !important;
+  font-size: clamp(24px, 3vw, 40px);
+  font-weight: 700;
+  letter-spacing: -.05em;
+  line-height: 1.05;
+}
+
+.project-description {
+  max-width: 540px;
+  margin: 22px 0 0;
+  color: #000000 !important;
+  font-size: 10px;
+  line-height: 1.85;
+  white-space: pre-line;
+}
+
+.project-copy .email-link {
+  margin-top: 28px;
+  color: #000000 !important;
 }
 
 /* SOBRE - FOTO E TEXTO */
@@ -403,23 +497,6 @@ main {
 
 .about-copy {
   min-width: 0;
-}
-
-.panel-index {
-  display: block;
-  margin-bottom: 30px;
-  color: var(--wine);
-  font-size: 9px;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-}
-
-.text-panel h2 {
-  margin: 0;
-  font-size: clamp(44px, 5.8vw, 86px);
-  font-weight: 700;
-  letter-spacing: -.085em;
-  line-height: .95;
 }
 
 .about-copy .panel-columns {
@@ -504,8 +581,12 @@ main {
   max-height: 75svh;
 }
 
-/* FORÇAR TODOS OS TEXTOS DO SOBRE E CONTATO EM PRETO */
+/* FORÇAR TODOS OS TEXTOS EM PRETO */
 
+.projects-panel h2,
+.projects-panel h3,
+.projects-panel p,
+.projects-panel a,
 .about-panel h2,
 .about-panel p,
 .about-panel span,
@@ -519,6 +600,7 @@ main {
   color: #000000 !important;
 }
 
+.projects-panel svg,
 .about-panel svg,
 .contact-panel svg {
   color: #000000 !important;
@@ -534,6 +616,7 @@ main,
 .photo-rail,
 .section-view,
 .text-panel,
+.projects-panel,
 .about-panel,
 .contact-panel,
 .sidebar,
@@ -725,6 +808,20 @@ main,
     padding: 34px 26px;
   }
 
+  /* PROJETOS MOBILE (FOTO ACIMA, TEXTO ABAIXO) */
+
+  .project-row {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .project-media img {
+    max-height: 460px;
+    object-position: center;
+  }
+
+  /* SOBRE MOBILE */
+
   .about-layout {
     grid-template-columns: 1fr;
     gap: 30px;
@@ -813,7 +910,8 @@ main,
   }
 
   .panel-columns p,
-  .clients p {
+  .clients p,
+  .project-description {
     font-size: 9px;
   }
 

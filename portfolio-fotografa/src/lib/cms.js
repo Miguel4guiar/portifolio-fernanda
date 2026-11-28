@@ -15,7 +15,6 @@ function getYouTubeThumb(url) {
   const match = url.match(
     /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?|shorts)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/
   );
-  // maxresdefault entrega a capa em HD 16:9 sem as tarjas pretas em cima e embaixo
   return match ? `https://img.youtube.com/vi/${match[1]}/maxresdefault.jpg` : '';
 }
 
@@ -31,6 +30,17 @@ const ALBUM_QUERY = `*[_type == "album" && published != false] | order(coalesce(
   "id": _id, title, category, artist, year, description,
   "cover": coverImage.asset->url,
   "photos": photos[]->{ ${PHOTO_FIELDS} }, orderRank, _createdAt
+}`;
+
+const PROJECT_QUERY = `*[_type == "project"] | order(coalesce(orderRank, 999999) asc, _createdAt desc) {
+  "id": _id,
+  title,
+  subtitle,
+  description,
+  link,
+  "image": coalesce(image.asset->url, coverImage.asset->url),
+  orderRank,
+  _createdAt
 }`;
 
 function normalize(item = {}) {
@@ -71,7 +81,6 @@ export async function getAlbums() {
         .map(normalize)
         .filter((photo) => photo.image || photo.videoUrl);
 
-      // Usa a coverImage do álbum ou, se não houver, a capa do primeiro item/vídeo
       const cover = album.cover || normalizedPhotos[0]?.image || '';
 
       return {
@@ -83,6 +92,12 @@ export async function getAlbums() {
     .filter((album) => album.cover || album.photos.length > 0);
 }
 
+export async function getProjects() {
+  if (!client) return [];
+  const result = await client.fetch(PROJECT_QUERY);
+  return (Array.isArray(result) ? result : []).filter((item) => item.image || item.title);
+}
+
 export async function getFeaturedPhotos() {
   const all = await getPhotos();
   return all.filter((item) => item.featured && item.mediaType !== 'video' && item.image);
@@ -90,12 +105,14 @@ export async function getFeaturedPhotos() {
 
 export function subscribeToPhotos(onChange, onError = () => {}) {
   if (!client) return () => {};
-  const subscription = client.listen('*[_type in ["photo", "album"]]', {}, { visibility: 'query' }).subscribe({
-    next: () =>
-      Promise.all([getPhotos(), getAlbums()])
-        .then(([photos, albums]) => onChange(photos, albums))
-        .catch(onError),
-    error: onError,
-  });
+  const subscription = client
+    .listen('*[_type in ["photo", "album", "project"]]', {}, { visibility: 'query' })
+    .subscribe({
+      next: () =>
+        Promise.all([getPhotos(), getAlbums(), getProjects()])
+          .then(([photos, albums, projects]) => onChange(photos, albums, projects))
+          .catch(onError),
+      error: onError,
+    });
   return () => subscription.unsubscribe();
 }

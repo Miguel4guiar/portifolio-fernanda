@@ -12,17 +12,16 @@ const CATEGORIES = [
   { value: 'ENTRELINHAS', label: 'ENTRELINHAS' },
 ];
 
-// Extrai a miniatura oficial do YouTube a partir de qualquer formato de link
 function getYouTubeThumb(url) {
   if (!url) return null;
   const match = url.match(
     /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?|shorts)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/
   );
-  return match ? `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg` : null;
+  return match ? `https://img.youtube.com/vi/${match[1]}/maxresdefault.jpg` : null;
 }
 
 export default function App() {
-  const { photos, albums, loading, error } = useManagedPhotos();
+  const { photos, albums, projects, loading, error } = useManagedPhotos();
 
   const [category, setCategory] = useState('All');
   const [view, setView] = useState('work');
@@ -46,7 +45,6 @@ export default function App() {
     [albums, category]
   );
 
-  // Filtra fotos e vídeos avulsos (que têm imagem OU link de vídeo)
   const visiblePhotos = useMemo(
     () =>
       photos.filter((p) => {
@@ -218,6 +216,14 @@ export default function App() {
           <nav className="page-nav" aria-label="Navegação">
             <button
               type="button"
+              className={view === 'projects' ? 'active' : ''}
+              onClick={() => chooseView('projects')}
+            >
+              Projetos
+            </button>
+
+            <button
+              type="button"
               className={view === 'about' ? 'active' : ''}
               onClick={() => chooseView('about')}
             >
@@ -363,7 +369,7 @@ export default function App() {
               );
             })}
 
-          {/* FOTOS E VÍDEOS AVULSOS (aparecem mesmo se houver álbuns) */}
+          {/* FOTOS E VÍDEOS AVULSOS */}
           {!loading &&
             !error &&
             !activeAlbum &&
@@ -451,6 +457,69 @@ export default function App() {
         </div>
       )}
 
+      {/* PROJETOS - IMAGEM À ESQUERDA, TEXTO À DIREITA */}
+      {view === 'projects' && (
+        <div className="section-view">
+          <section className="text-panel projects-panel" id="projetos">
+            <span className="panel-index">01 / Projetos</span>
+
+            <h2>
+              Projetos &amp;
+              <br />
+              Direção Criativa.
+            </h2>
+
+            <div className="projects-list">
+              {projects.map((project, index) => (
+                <article className="project-row" key={project.id}>
+                  {/* LADO ESQUERDO: FOTO */}
+                  <div className="project-media">
+                    {project.image && (
+                      <img
+                        src={project.image}
+                        alt={project.title}
+                        loading="lazy"
+                      />
+                    )}
+                  </div>
+
+                  {/* LADO DIREITO: TEXTO */}
+                  <div className="project-copy">
+                    <span className="project-meta">
+                      {String(index + 1).padStart(2, '0')}
+                      {project.subtitle ? ` · ${project.subtitle}` : ''}
+                    </span>
+
+                    <h3>{project.title}</h3>
+
+                    {project.description && (
+                      <p className="project-description">
+                        {project.description}
+                      </p>
+                    )}
+
+                    {project.link && (
+                      <a
+                        href={project.link}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="email-link"
+                      >
+                        Acessar projeto <ArrowUpRight size={14} />
+                      </a>
+                    )}
+                  </div>
+                </article>
+              ))}
+
+              {!loading && projects.length === 0 && (
+                <p className="panel-columns">Nenhum projeto publicado ainda.</p>
+              )}
+            </div>
+          </section>
+        </div>
+      )}
+
       {/* SOBRE */}
       {view === 'about' && (
         <div className="section-view">
@@ -465,7 +534,7 @@ export default function App() {
               </div>
 
               <div className="about-copy">
-                <span className="panel-index">01 / Sobre</span>
+                <span className="panel-index">02 / Sobre</span>
 
                 <h2>
                   Câmera na
@@ -507,7 +576,7 @@ export default function App() {
       {view === 'contact' && (
         <div className="section-view">
           <section className="text-panel contact-panel" id="contato">
-            <span className="panel-index">02 / Contato</span>
+            <span className="panel-index">03 / Contato</span>
 
             <h2>
               Vamos criar
