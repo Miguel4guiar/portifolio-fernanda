@@ -199,7 +199,7 @@ main {
   display: none;
 }
 
-/* GALERIA */
+/* GALERIA HORIZONTAL */
 
 .photo-rail {
   background: #ffffff;
@@ -207,7 +207,7 @@ main {
   margin-left: 246px;
   padding: 38px 22px;
   display: flex;
-  gap: 18px;
+  gap: 28px;
   overflow-x: auto;
   overflow-y: hidden;
   cursor: grab;
@@ -327,6 +327,107 @@ main {
   color: var(--ink);
 }
 
+/* SLIDES DE PROJETOS NO TRILHO HORIZONTAL (FOTO À ESQUERDA + TEXTO À DIREITA) */
+
+.project-slide {
+  width: min(82vw, 1020px);
+  height: 100%;
+  flex: none;
+  scroll-snap-align: center;
+  padding-right: 28px;
+  border-right: 1px solid rgba(23, 23, 20, 0.12);
+}
+
+.project-slide:last-child {
+  border-right: 0;
+  padding-right: 0;
+}
+
+.project-slide-inner {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(24px, 4vw, 56px);
+}
+
+.project-slide-media {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.project-slide-media img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.project-slide-copy {
+  min-width: 0;
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.project-meta {
+  display: block;
+  margin-bottom: 14px;
+  color: var(--wine) !important;
+  font-size: 9px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.project-slide-copy h3 {
+  margin: 0;
+  color: #000000 !important;
+  font-size: clamp(24px, 2.8vw, 38px);
+  font-weight: 700;
+  letter-spacing: -.05em;
+  line-height: 1.05;
+}
+
+.project-slide-text {
+  margin-top: 20px;
+  max-height: 48svh;
+  overflow-y: auto;
+  padding-right: 10px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(23, 23, 20, 0.25) transparent;
+}
+
+.project-slide-text::-webkit-scrollbar {
+  width: 3px;
+}
+
+.project-slide-text::-webkit-scrollbar-thumb {
+  background: rgba(23, 23, 20, 0.25);
+  border-radius: 9999px;
+}
+
+.project-slide-text p {
+  margin: 0;
+  color: #000000 !important;
+  font-size: 10px;
+  line-height: 1.85;
+  white-space: pre-line;
+}
+
+.project-slide-copy .email-link {
+  margin-top: 24px;
+  color: #000000 !important;
+}
+
 .no-image {
   display: grid;
   min-width: 300px;
@@ -349,7 +450,7 @@ main {
   text-align: center;
 }
 
-/* SEÇÕES PROJETOS, SOBRE E CONTATO */
+/* SEÇÕES SOBRE E CONTATO */
 
 .section-view {
   height: 100svh;
@@ -364,7 +465,6 @@ main {
   padding: clamp(36px, 5vw, 76px);
 }
 
-.projects-panel,
 .about-panel,
 .contact-panel {
   background: var(--paper);
@@ -385,82 +485,6 @@ main {
   font-weight: 700;
   letter-spacing: -.085em;
   line-height: .95;
-}
-
-/* PROJETOS - IMAGEM À ESQUERDA E TEXTO À DIREITA */
-
-.projects-list {
-  margin-top: 7vh;
-  display: flex;
-  flex-direction: column;
-  gap: clamp(48px, 7vh, 88px);
-}
-
-.project-row {
-  display: grid;
-  grid-template-columns: minmax(260px, 1fr) minmax(0, 1.15fr);
-  align-items: center;
-  gap: clamp(28px, 5vw, 68px);
-  padding-bottom: clamp(40px, 6vh, 72px);
-  border-bottom: 1px solid rgba(23, 23, 20, 0.14);
-}
-
-.project-row:last-child {
-  border-bottom: 0;
-  padding-bottom: 0;
-}
-
-.project-media {
-  width: 100%;
-  overflow: hidden;
-}
-
-.project-media img {
-  display: block;
-  width: 100%;
-  height: auto;
-  max-height: 580px;
-  object-fit: contain;
-  object-position: left center;
-}
-
-.project-copy {
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-.project-meta {
-  display: block;
-  margin-bottom: 14px;
-  color: var(--wine) !important;
-  font-size: 9px;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-}
-
-.project-copy h3 {
-  margin: 0;
-  color: #000000 !important;
-  font-size: clamp(24px, 3vw, 40px);
-  font-weight: 700;
-  letter-spacing: -.05em;
-  line-height: 1.05;
-}
-
-.project-description {
-  max-width: 540px;
-  margin: 22px 0 0;
-  color: #000000 !important;
-  font-size: 10px;
-  line-height: 1.85;
-  white-space: pre-line;
-}
-
-.project-copy .email-link {
-  margin-top: 28px;
-  color: #000000 !important;
 }
 
 /* SOBRE - FOTO E TEXTO */
@@ -583,10 +607,6 @@ main {
 
 /* FORÇAR TODOS OS TEXTOS EM PRETO */
 
-.projects-panel h2,
-.projects-panel h3,
-.projects-panel p,
-.projects-panel a,
 .about-panel h2,
 .about-panel p,
 .about-panel span,
@@ -600,7 +620,6 @@ main {
   color: #000000 !important;
 }
 
-.projects-panel svg,
 .about-panel svg,
 .contact-panel svg {
   color: #000000 !important;
@@ -616,7 +635,6 @@ main,
 .photo-rail,
 .section-view,
 .text-panel,
-.projects-panel,
 .about-panel,
 .contact-panel,
 .sidebar,
@@ -739,7 +757,7 @@ main,
     min-height: 460px;
     margin-left: 0;
     padding: 14px 14px 24px;
-    gap: 14px;
+    gap: 16px;
     align-items: center;
     scroll-snap-type: x mandatory;
     overscroll-behavior-x: contain;
@@ -786,6 +804,38 @@ main,
     grid-column: 2;
   }
 
+  /* PROJETOS MOBILE NO TRILHO HORIZONTAL (FOTO EM CIMA + TEXTO EMBAIXO) */
+
+  .project-slide {
+    width: 88vw;
+    height: 100%;
+    padding-right: 16px;
+  }
+
+  .project-slide-inner {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(0, 1fr) auto;
+    gap: 16px;
+    align-content: center;
+  }
+
+  .project-slide-media {
+    max-height: 44svh;
+  }
+
+  .project-slide-copy {
+    justify-content: flex-start;
+  }
+
+  .project-slide-copy h3 {
+    font-size: clamp(20px, 6vw, 28px);
+  }
+
+  .project-slide-text {
+    margin-top: 10px;
+    max-height: 22svh;
+  }
+
   .view-photo {
     display: none;
   }
@@ -807,20 +857,6 @@ main,
     min-height: 0;
     padding: 34px 26px;
   }
-
-  /* PROJETOS MOBILE (FOTO ACIMA, TEXTO ABAIXO) */
-
-  .project-row {
-    grid-template-columns: 1fr;
-    gap: 24px;
-  }
-
-  .project-media img {
-    max-height: 460px;
-    object-position: center;
-  }
-
-  /* SOBRE MOBILE */
 
   .about-layout {
     grid-template-columns: 1fr;
@@ -892,6 +928,10 @@ main,
     max-width: 90vw;
   }
 
+  .project-slide {
+    width: 90vw;
+  }
+
   .section-view {
     padding: 10px;
   }
@@ -911,7 +951,7 @@ main,
 
   .panel-columns p,
   .clients p,
-  .project-description {
+  .project-slide-text p {
     font-size: 9px;
   }
 

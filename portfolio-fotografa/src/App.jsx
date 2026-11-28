@@ -10,6 +10,7 @@ const CATEGORIES = [
   { value: 'EDITORIAL', label: 'EDITORIAL' },
   { value: 'COMERCIAL', label: 'COMERCIAL' },
   { value: 'ENTRELINHAS', label: 'ENTRELINHAS' },
+  { value: 'PROJETOS', label: 'PROJETOS' },
 ];
 
 function getYouTubeThumb(url) {
@@ -41,21 +42,31 @@ export default function App() {
     normalizeCategory(value) === normalizeCategory(category);
 
   const visibleAlbums = useMemo(
-    () => albums.filter((album) => categoryMatches(album.category)),
+    () =>
+      category === 'PROJETOS'
+        ? []
+        : albums.filter((album) => categoryMatches(album.category)),
     [albums, category]
   );
 
   const visiblePhotos = useMemo(
     () =>
-      photos.filter((p) => {
-        const videoLink = p.videoUrl || p.youtubeUrl || p.url || p.video;
-        return (
-          p.showInGallery !== false &&
-          (p.image || videoLink) &&
-          categoryMatches(p.category)
-        );
-      }),
+      category === 'PROJETOS'
+        ? []
+        : photos.filter((p) => {
+            const videoLink = p.videoUrl || p.youtubeUrl || p.url || p.video;
+            return (
+              p.showInGallery !== false &&
+              (p.image || videoLink) &&
+              categoryMatches(p.category)
+            );
+          }),
     [photos, category]
+  );
+
+  const visibleProjects = useMemo(
+    () => (category === 'All' || category === 'PROJETOS' ? projects : []),
+    [projects, category]
   );
 
   const albumPhotos = activeAlbum?.photos || [];
@@ -183,7 +194,7 @@ export default function App() {
     <main>
       {/* MENU LATERAL */}
       <header className="sidebar">
-        <button className="brand" onClick={() => chooseView('work')}>
+        <button className="brand" onClick={() => chooseCategory('All')}>
           <img src={logoFeshoots} alt="Feshoots — Fotografia e direção criativa" />
           <span>Fotografia &amp; direção criativa</span>
         </button>
@@ -198,6 +209,7 @@ export default function App() {
         </button>
 
         <div className={`sidebar-content ${menuOpen ? 'open' : ''}`}>
+          {/* CATEGORIAS EM CIMA (INCLUINDO PROJETOS) */}
           <nav className="category-nav" aria-label="Categorias da galeria">
             {CATEGORIES.map((item) => (
               <button
@@ -213,15 +225,8 @@ export default function App() {
             ))}
           </nav>
 
+          {/* PÁGINAS INSTITUCIONAIS EMBAIXO */}
           <nav className="page-nav" aria-label="Navegação">
-            <button
-              type="button"
-              className={view === 'projects' ? 'active' : ''}
-              onClick={() => chooseView('projects')}
-            >
-              Projetos
-            </button>
-
             <button
               type="button"
               className={view === 'about' ? 'active' : ''}
@@ -251,7 +256,7 @@ export default function App() {
         </div>
       </header>
 
-      {/* GALERIA E ÁLBUNS */}
+      {/* TRILHO HORIZONTAL (ÁLBUNS, FOTOS, VÍDEOS E PROJETOS) */}
       {view === 'work' && (
         <div
           ref={railRef}
@@ -443,59 +448,40 @@ export default function App() {
               );
             })}
 
-          {/* MENSAGEM QUANDO NÃO EXISTIREM FOTOS OU VÍDEOS */}
+          {/* SLIDES DE PROJETOS NO MESMO TRILHO HORIZONTAL (FOTO ESQUERDA + TEXTO DIREITA) */}
           {!loading &&
             !error &&
-            ((activeAlbum && albumPhotos.length === 0) ||
-              (!activeAlbum &&
-                visibleAlbums.length === 0 &&
-                visiblePhotos.length === 0)) && (
-              <div className="loading-panel">
-                Nenhum projeto nesta categoria ainda.
-              </div>
-            )}
-        </div>
-      )}
-
-      {/* PROJETOS - IMAGEM À ESQUERDA, TEXTO À DIREITA */}
-      {view === 'projects' && (
-        <div className="section-view">
-          <section className="text-panel projects-panel" id="projetos">
-            <span className="panel-index">01 / Projetos</span>
-
-            <h2>
-              Projetos &amp;
-              <br />
-              Direção Criativa.
-            </h2>
-
-            <div className="projects-list">
-              {projects.map((project, index) => (
-                <article className="project-row" key={project.id}>
+            !activeAlbum &&
+            visibleProjects.length > 0 &&
+            visibleProjects.map((project, index) => (
+              <article className="project-slide" key={project.id}>
+                <div className="project-slide-inner">
                   {/* LADO ESQUERDO: FOTO */}
-                  <div className="project-media">
+                  <div className="project-slide-media">
                     {project.image && (
                       <img
                         src={project.image}
                         alt={project.title}
-                        loading="lazy"
+                        draggable="false"
+                        loading={index > 1 ? 'lazy' : 'eager'}
                       />
                     )}
                   </div>
 
                   {/* LADO DIREITO: TEXTO */}
-                  <div className="project-copy">
+                  <div className="project-slide-copy">
                     <span className="project-meta">
-                      {String(index + 1).padStart(2, '0')}
+                      PROJETO · {String(index + 1).padStart(2, '0')} /{' '}
+                      {String(visibleProjects.length).padStart(2, '0')}
                       {project.subtitle ? ` · ${project.subtitle}` : ''}
                     </span>
 
                     <h3>{project.title}</h3>
 
                     {project.description && (
-                      <p className="project-description">
-                        {project.description}
-                      </p>
+                      <div className="project-slide-text">
+                        <p>{project.description}</p>
+                      </div>
                     )}
 
                     {project.link && (
@@ -509,14 +495,22 @@ export default function App() {
                       </a>
                     )}
                   </div>
-                </article>
-              ))}
+                </div>
+              </article>
+            ))}
 
-              {!loading && projects.length === 0 && (
-                <p className="panel-columns">Nenhum projeto publicado ainda.</p>
-              )}
-            </div>
-          </section>
+          {/* MENSAGEM QUANDO NÃO EXISTIREM ITENS */}
+          {!loading &&
+            !error &&
+            ((activeAlbum && albumPhotos.length === 0) ||
+              (!activeAlbum &&
+                visibleAlbums.length === 0 &&
+                visiblePhotos.length === 0 &&
+                visibleProjects.length === 0)) && (
+              <div className="loading-panel">
+                Nenhum projeto nesta categoria ainda.
+              </div>
+            )}
         </div>
       )}
 
@@ -534,7 +528,7 @@ export default function App() {
               </div>
 
               <div className="about-copy">
-                <span className="panel-index">02 / Sobre</span>
+                <span className="panel-index">01 / Sobre</span>
 
                 <h2>
                   Câmera na
@@ -576,7 +570,7 @@ export default function App() {
       {view === 'contact' && (
         <div className="section-view">
           <section className="text-panel contact-panel" id="contato">
-            <span className="panel-index">03 / Contato</span>
+            <span className="panel-index">02 / Contato</span>
 
             <h2>
               Vamos criar
