@@ -55,7 +55,140 @@ a {
 main {
   min-height: 100svh;
 }
+/* CARTA DE INTRODUÇÃO AO ENTRAR NO SITE */
 
+.intro-letter-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.96) !important;
+  backdrop-filter: blur(8px);
+  cursor: pointer;
+}
+
+.intro-letter-card {
+  width: 100%;
+  max-width: 620px;
+  max-height: 90svh;
+  overflow-y: auto;
+  padding: clamp(28px, 5vw, 56px);
+  background-color: #faf7f2 !important;
+  border: 1px solid rgba(23, 23, 20, 0.16);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  transition: transform 300ms ease, border-color 300ms ease;
+}
+
+.intro-letter-card:hover {
+  border-color: var(--wine);
+  transform: translateY(-2px);
+}
+
+.intro-letter-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid rgba(23, 23, 20, 0.12);
+}
+
+.intro-letter-logo {
+  width: auto;
+  max-width: 115px;
+  height: auto;
+  object-fit: contain;
+}
+
+.intro-letter-date {
+  color: var(--muted);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.intro-letter-tag {
+  display: block;
+  margin-top: 28px;
+  color: var(--wine);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.intro-letter-title {
+  margin: 14px 0 0;
+  color: #000000;
+  font-size: clamp(24px, 3.6vw, 36px);
+  font-weight: 700;
+  letter-spacing: -0.05em;
+  line-height: 1.08;
+}
+
+.intro-letter-body {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.intro-letter-body p {
+  margin: 0;
+  color: #000000;
+  font-size: 11px;
+  line-height: 1.9;
+}
+
+.intro-letter-footer {
+  margin-top: 34px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(23, 23, 20, 0.12);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.intro-letter-signature {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.intro-letter-signature strong {
+  color: #000000;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.intro-letter-signature span {
+  color: var(--muted);
+  font-size: 9px;
+  font-style: italic;
+}
+
+.intro-letter-enter {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 200ms ease;
+}
+
+.intro-letter-card:hover .intro-letter-enter {
+  background-color: var(--wine) !important;
+}
 /* SIDEBAR */
 
 .sidebar {

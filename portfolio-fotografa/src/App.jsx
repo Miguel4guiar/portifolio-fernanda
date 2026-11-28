@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowUpRight, Instagram } from 'lucide-react';
 import image from '../src/data/_P3_1145.jpg';
 import { useManagedPhotos } from './lib/useManagedPhotos.js';
@@ -23,6 +24,9 @@ function getYouTubeThumb(url) {
 
 export default function App() {
   const { photos, albums, projects, loading, error } = useManagedPhotos();
+
+  // Controla a exibição da carta de introdução ao abrir o site
+  const [introOpen, setIntroOpen] = useState(true);
 
   const [category, setCategory] = useState('All');
   const [view, setView] = useState('work');
@@ -105,6 +109,7 @@ export default function App() {
 
     const horizontalWheel = (event) => {
       if (
+        introOpen ||
         window.innerWidth <= 900 ||
         Math.abs(event.deltaX) > Math.abs(event.deltaY)
       ) {
@@ -120,14 +125,22 @@ export default function App() {
     });
 
     return () => rail.removeEventListener('wheel', horizontalWheel);
-  }, [view]);
+  }, [view, introOpen]);
 
   useEffect(() => {
     const onKey = (event) => {
       if (event.key === 'Escape') {
+        if (introOpen) {
+          setIntroOpen(false);
+          return;
+        }
         setActivePhoto(null);
         setActiveAlbum(null);
         setMenuOpen(false);
+      }
+
+      if (introOpen && (event.key === 'Enter' || event.key === ' ')) {
+        setIntroOpen(false);
       }
 
       if (activePhoto && event.key === 'ArrowRight') {
@@ -141,7 +154,7 @@ export default function App() {
 
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [activePhoto, lightboxPhotos]);
+  }, [activePhoto, lightboxPhotos, introOpen]);
 
   const chooseCategory = (value) => {
     setCategory(value);
@@ -167,6 +180,7 @@ export default function App() {
 
   const startDrag = (event) => {
     if (
+      introOpen ||
       window.innerWidth <= 900 ||
       !railRef.current ||
       event.button !== 0
@@ -192,6 +206,79 @@ export default function App() {
 
   return (
     <main>
+      {/* CARTA DE INTRODUÇÃO AO ENTRAR NO SITE */}
+      <AnimatePresence>
+        {introOpen && (
+          <motion.div
+            key="intro-letter"
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0, y: -24, filter: 'blur(6px)' }}
+            transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
+            className="intro-letter-overlay"
+            onClick={() => setIntroOpen(false)}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Carta de apresentação"
+          >
+            <motion.article
+              initial={{ opacity: 0, y: 18, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+              className="intro-letter-card"
+              onClick={(e) => {
+                e.stopPropagation();
+                setIntroOpen(false);
+              }}
+            >
+              <div className="intro-letter-header">
+                <img
+                  src={logoFeshoots}
+                  alt="Feshoots"
+                  className="intro-letter-logo"
+                />
+                <span className="intro-letter-date">
+                  SÃO PAULO · {new Date().getFullYear()}
+                </span>
+              </div>
+
+              <span className="intro-letter-tag">CARTA ABERTA · ACERVO</span>
+
+              <h1 className="intro-letter-title">
+                Imagem, música e presença cultural.
+              </h1>
+
+              <div className="intro-letter-body">
+                <p>
+                  Este espaço reúne fragmentos de palco, retratos, campanhas e
+                  narrativas visuais construídas entre a música e a cultura
+                  contemporânea.
+                </p>
+                <p>
+                  Cada registro nasce do olhar próximo — da primeira fila, dos
+                  bastidores e das histórias que ganham forma através da direção
+                  criativa e da fotografia.
+                </p>
+              </div>
+
+              <div className="intro-letter-footer">
+                <div className="intro-letter-signature">
+                  <strong>Fernanda Opitacio</strong>
+                  <span>Fotografia &amp; Direção Criativa</span>
+                </div>
+
+                <button
+                  type="button"
+                  className="intro-letter-enter"
+                  onClick={() => setIntroOpen(false)}
+                >
+                  Abrir portfólio <ArrowUpRight size={14} />
+                </button>
+              </div>
+            </motion.article>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* MENU LATERAL */}
       <header className="sidebar">
         <button className="brand" onClick={() => chooseCategory('All')}>
@@ -448,7 +535,7 @@ export default function App() {
               );
             })}
 
-          {/* SLIDES DE PROJETOS NO MESMO TRILHO HORIZONTAL (FOTO ESQUERDA + TEXTO DIREITA) */}
+          {/* SLIDES DE PROJETOS NO MESMO TRILHO HORIZONTAL */}
           {!loading &&
             !error &&
             !activeAlbum &&
@@ -456,7 +543,6 @@ export default function App() {
             visibleProjects.map((project, index) => (
               <article className="project-slide" key={project.id}>
                 <div className="project-slide-inner">
-                  {/* LADO ESQUERDO: FOTO */}
                   <div className="project-slide-media">
                     {project.image && (
                       <img
@@ -468,7 +554,6 @@ export default function App() {
                     )}
                   </div>
 
-                  {/* LADO DIREITO: TEXTO */}
                   <div className="project-slide-copy">
                     <span className="project-meta">
                       PROJETO · {String(index + 1).padStart(2, '0')} /{' '}
